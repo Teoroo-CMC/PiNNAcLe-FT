@@ -1,0 +1,2 @@
+Net force per atom (meV/Ang/Atom) on whole set,x=0.7894581259620533,y=0.7309132907057057,z=0.9081531484245283.
+energy and force measures on validation set, emax=0.7488665803236927 meV/Atom, fmax=117.43569374084473 meV/Ang, ermse=0.5503118728871783 meV/Atom, frmse=24.628615006804466 meV/Ang
