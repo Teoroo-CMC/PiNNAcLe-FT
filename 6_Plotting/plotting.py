@@ -321,3 +321,9 @@ if __name__ == '__main__':
     # step 3: activer learning
     drawLearningCurve(nSeed=1)
     drawNetForceAndAtomicDress(nSeed=1)
+
+    drawLearningCurve(nSeed=2)
+    drawNetForceAndAtomicDress(nSeed=2)
+
+    drawLearningCurve(nSeed=4)
+    drawNetForceAndAtomicDress(nSeed=4)
