@@ -7,8 +7,9 @@ def build_dataset_from_mace_traj():
     from ase.io.trajectory import Trajectory
     from setting import proj_params
 
-    data = []
     time_span = 0.4 # ps
+    data = {'e_data':[], 'f_data':[], 'elems':[], 'coord':[], 'cell':[]}
+
     for subdir_name in ["1_MACE-r2scan-330K", "2_MACE-r2scan-400K", "3_MACE-r2scan-500K"]:
 
         traj_file = ""
@@ -33,22 +34,21 @@ def build_dataset_from_mace_traj():
 
         # remove the first snapshot
         for idx in range(1, len(traj_time), traj_span):
-            frame = {}
-            frame['coord'] = traj[idx].get_positions(wrap=True) # ang
-            frame['elems'] = traj[idx].get_chemical_symbols()
-            frame['cell'] = traj[idx].get_cell(complete=True)
-            frame['f_data'] = traj[idx].calc.results["forces"]  # eV/ang
-            frame['e_data'] = traj[idx].calc.results["energy"] # eV
-            print(frame['e_data'])
-            data.append(frame)
+            data['coord'].append(traj[idx].get_positions(wrap=True)) # ang
+            data['elems'].append(traj[idx].numbers)
+            data['cell'].append(traj[idx].get_cell(complete=True))
+            data['f_data'].append(traj[idx].calc.results["forces"])  # eV/ang
+            data['e_data'].append(traj[idx].calc.results["energy"]) # eV
+            print(data['e_data'][-1])
 
         print(subdir_name, "Number of snapshots = %d"%(len(data)))
 
     # save to file
     from pinn.io import load_numpy,write_tfrecord
+    data = {k:np.array(v) for k,v in data.items()}
     dataset = load_numpy(data)
     tfr_file = proj_params["dataset_dir"] / "mix_dataset" / "mixProton_330K_400K_500K.yml"
-    write_tfrecord(tfr_file, dataset)
+    write_tfrecord(str(tfr_file), dataset)
 
 # 
 if __name__ == '__main__':

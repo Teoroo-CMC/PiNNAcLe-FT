@@ -7,7 +7,7 @@ format:
   coord:
     dtype: float32
     shape:
-    - null
+    - 193
     - 3
   e_data:
     dtype: float32
@@ -15,11 +15,11 @@ format:
   elems:
     dtype: int32
     shape:
-    - null
+    - 193
   f_data:
     dtype: float32
     shape:
-    - null
+    - 193
     - 3
 info:
   n_sample: 7500

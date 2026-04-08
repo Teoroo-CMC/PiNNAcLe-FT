@@ -44,10 +44,10 @@ def build_model(nSeed):
 
     # split training and test sets
     # make sure the energy is eV, the force is eV/Ang
-    strDataFile = proj_params["dataset_dir"] / "datasets" / "mixProton_330K_400K_500K.yml"
-    dataset = load_tfrecord(strDataFile, splits={'train':nTrainRatio, 'vali':10-nTrainRatio}, shuffle=bShuffle, seed=nSeed)
-    write_tfrecord(proj_params["pinet2_init_dir"] / f'train-seed{nSeed}.yml', dataset['train'])
-    write_tfrecord(proj_params["pinet2_init_dir"] / f'vali-seed{nSeed}.yml', dataset['vali'])
+    strDataFile = proj_params["dataset_dir"] / "mix_dataset" / "mixProton_330K_400K_500K.yml"
+    dataset = load_tfrecord(str(strDataFile), splits={'train':nTrainRatio, 'vali':10-nTrainRatio}, shuffle=bShuffle, seed=nSeed)
+    write_tfrecord(str(proj_params["pinet2_init_dir"] / f'train-seed{nSeed}.yml'), dataset['train'])
+    write_tfrecord(str(proj_params["pinet2_init_dir"] / f'vali-seed{nSeed}.yml'), dataset['vali'])
 
     # get model parameters
     params = {}
@@ -110,7 +110,7 @@ def build_model(nSeed):
     params['model_dir'] = strModelName
 
     # initial e_dress is necessary, even running in a fine-tuning proceess
-    ds = load_tfrecord(proj_params["pinet2_init_dir"] / "train-seed{nSeed}.yml")
+    ds = load_tfrecord(str(proj_params["pinet2_init_dir"] / f"train-seed{nSeed}.yml"))
     init_params(params, ds)
 
     scratch_dir = None
@@ -135,8 +135,8 @@ def build_model(nSeed):
             dataset = dataset.cache(cache_dir)
         return dataset
 
-    train_fn = lambda: _dataset_fn(proj_params["pinet2_init_dir"] / f'train-seed{nSeed}.yml').repeat().shuffle(nshuffleBuffer)
-    eval_fn = lambda: _dataset_fn(proj_params["pinet2_init_dir"] / f'vali-seed{nSeed}.yml')
+    train_fn = lambda: _dataset_fn(str(proj_params["pinet2_init_dir"] / f'train-seed{nSeed}.yml')).repeat().shuffle(nshuffleBuffer)
+    eval_fn = lambda: _dataset_fn(str(proj_params["pinet2_init_dir"] / f'vali-seed{nSeed}.yml'))
     config = tf.estimator.RunConfig(keep_checkpoint_max=nmax_ckpts,
                                     log_step_count_steps=nlog_every,
                                     save_summary_steps=nlog_every,
@@ -169,7 +169,7 @@ def get_ener_force_metrics(nSeed):
     from pinn.io import load_tfrecord
     from setting import proj_params
 
-    dataset = load_tfrecord(proj_params["dataset_dir"] / "mixProton_330K_400K_500K.yml")
+    dataset = load_tfrecord(str(proj_params["dataset_dir"] / "mixProton_330K_400K_500K.yml"))
     fields = ['elems', 'coord', 'cell', 'e_data', 'f_data']
     refData = {k: [] for k in fields}
     for example in dataset:

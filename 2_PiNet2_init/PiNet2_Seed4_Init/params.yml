@@ -11,7 +11,7 @@ model:
     log_e_per_atom: true
     use_e_per_atom: false
     use_force: true
-model_dir: PiNet2_Seed2_Init
+model_dir: PiNet2_Seed4_Init
 network:
   name: PiNet2
   params:
