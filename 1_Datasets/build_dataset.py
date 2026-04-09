@@ -41,8 +41,6 @@ def build_dataset_from_mace_traj():
             data['e_data'].append(traj[idx].calc.results["energy"]) # eV
             print(data['e_data'][-1])
 
-        print(subdir_name, "Number of snapshots = %d"%(len(data)))
-
     # save to file
     from pinn.io import load_numpy,write_tfrecord
     data = {k:np.array(v) for k,v in data.items()}
