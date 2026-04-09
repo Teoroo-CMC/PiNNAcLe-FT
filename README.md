@@ -35,12 +35,43 @@ PiNNAcLe-Proton-aq/
 │   │   │   └── gen<...>/wat64_h3o+/asemd.log # The ASE trajectory log file in generation <...>
 │   │   ├── models/                          # The information of MD simulation in each generation
 │   │   │   ├── gen<...>/model1/pinn.log     # The validation log file for models in generation <...>
-│   │   │   └── gen<...>/model1/append.log   # The predicted net force per atom by models on current datasets
+│   │   │   └── gen<...>/model1/append.log   # The net force per atom on current datasets based on CP2K labels
+│   │   └── pinnacle.log                     # The log file of PiNNAcLe
 │   ├── input/cp2k/r2SCAN-sp.inp             # The input file for single point calculation by CP2K
 │   ├── nextflow/                            # The modified Nextflow scripts based that in PiNNAcLe package
 │   │   │   ├── module/
-│   │   │   │   ├── module
-
+│   │   │   │   ├── pinn.nf                  # The script for training models and running MD simulations
+│   │   │   │   ├── cp2k.nf                  # The script for single point calculation by CP2K
+│   │   │   │   ├── tips.nf                  # The script for sampling new trajectories, and updating datasets
+│   │   │   │   └── tools.nf                 # The script for releasing the disk space by remove some files
+│   │   └── └── acle-cp2k-from-user-model.nf # The script for main PiNNAcLe workflow started from an user model
+│   ├── main.nf                              # The entry point of PiNNAcLe
+│   └── nextflow.config                      # The configuration file of Nextflow for PiNNAcLe
+├── 4_MD_equ/                                # Directory: the product simulation by fine-tuned PiNet2-P3 models
+│   ├── models-ft/                           
+│   │   ├── PiNet2_Seed*_ft/                 # The fine-tuned three PiNet2-P3 models      
+│   │   │   ├── eval/events.<...>            # The validation event file
+│   │   │   ├── checkpoint                   # The file storing the paths of actual checkpoint files
+│   │   │   ├── params.yml                   # The hyper-parameter file
+│   │   │   ├── graph.pbtxt                  # The text-format file of TensorFlow computation graph
+│   │   │   ├── events.<...>                 # The training event files
+│   │   └── └── model.ckpt-<...>             # The actual Tensorflow checkpoint files
+│   ├── mds/                                 # The MD trajectories and analyse results
+│   │   ├── PiNet2_Seed*_ft/
+│   │   │   ├── <...>.rdf                    # The RDF results between given species pairs
+│   │   │   ├── wat64_h3o+-330K-O-zzy.msd    # The MSD results of all oxygen atoms
+│   │   │   └── wat64_h3o+-330K-proton-zzy-nearestOxyg  # The MSD results of proton
+│   │   │                                                (defined as the oxygen in hydronium ions)
+│   ├── nvt_md_pinet2.nf                     # The Nextflow script for MD driven by PiNet2-P3 models
+│   ├── nextflow.config                      # The configuration file of Nextflow for MD by PiNet2-P3 models
+│   └── analyse.py                           # The python code to analyse the trajectories
+├── 5_MD_nonequ/                             # Directory: the placeholder for non-equilibrium MD simulations
+├── 6_Plotting/                              # Directory: the plotting results
+│   ├── learning_curve_seed*.jpg             # The fine-tuning curve for PiNNAcLe
+│   ├── net_force_e_dress_seed*.jpg          # The net force per atom on datasets based on CP2K labels
+│   └── plotting.py                          # The python code for plotting
+├── setting.py                               # The global setting file for this project
+└── environment.yml                          # The conda environment file for this project
 ```
 # Installation
 + download the PiNNAcLe-Proton-aq project
