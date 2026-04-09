@@ -79,56 +79,79 @@ PiNNAcLe-Proton-aq/
 └── environment.yml                          # The conda environment file for this project
 ```
 # Installation
-+ download the PiNNAcLe-Proton-aq project
++ Download the PiNNAcLe-Proton-aq project
 ```
 git clone https://github.com/zzy2014/PiNNAcLe-Proton-aq.git
 ```
-  - then, change the PROJ_DIR variable in the setting.py file to the full path of _PiNNAcLe-Proton-aq_
-+ create the conda environment
+Then, change the PROJ_DIR variable in the setting.py file to the full path of _PiNNAcLe-Proton-aq_
++ Create the conda environment
 ```
 cd PiNNAcLe-Proton-aq
 conda env create -f environment.yml
 conda activate pinn
 ```
-+ install Nextflow
-  - see https://www.nextflow.io/docs/latest/install.html
-+ install singularity image of cp2k-2023.2
++ Install Nextflow by following https://www.nextflow.io/docs/latest/install.html
++ Install Singularity image of cp2k-2023.2
 ```
 cd 3_PiNet2_ft
 apptainer build cp2k2023_2.sif cp2k-v2023.def
 ```
-  - then, change the full path of cp2k2023_2.sif in nextflow.config under the 3_PiNet2_ft folder
-+ install the PiNN package
+Then, change the full path of cp2k2023_2.sif in 3_PiNet2_ft/nextflow.config file
++ Install the PiNN package
 ```
 cd ..
 pip install git+https://github.com/Teoroo-CMC/PiNN.git --no-deps
 ```
-+ install the tips package developed by Yunqi, and update the modifiations
++ Install the tips package developed by Yunqi, and update the modifiations
 ```
 pip install git+https://github.com/yqshao-archive/tips.git
 cp {PROJ_DIR}/3_PiNet2_ft/io/*.py {TIPS_DIR}/io/
 ```
-+ export the PiNNAcLe-Proton-aq project path to PYTHONPATH
++ Export the PiNNAcLe-Proton-aq project path to PYTHONPATH
 ```
 export PYTHONPATH={PROJ_DIR}:$PYTHONPATH
 ```
 # Usage
-+ run simulations by FM and construct the FM datasets
++ Run simulations by FM and construct the datasets
 ```
 cd 1_Datasets
 nextflow run nvt_md_mace_r2scan.nf -profile alvismace -bg > log.out
 ```
-after the simulations finished, move the trajectory files to the corresponding folder MACE-r2scan-<...>
+After the simulations finished, move the trajectory files to the corresponding subfolder MACE-r2scan-<...>, and built the dataset
 ```
 python build_dataset.py
 ```
-+ training the initial PiNet2-P3 models
++ Train the initial PiNet2-P3 models
 ```
 cd ../2_PiNet2_init
 python build_pinet2.py  # using the build_model function, and change the random seed manully
 ```
-after the training finished, estimate the performance of PiNet2-P3 models on energy and force
+After the training finished, estimate the performance of PiNet2-P3 models on energy and force
 ```
-python build_pinet2.py # using the get_ener_force_metrics function
+python build_pinet2.py # using the get_ener_force_metrics function, and change the random seed manully
 ```
-
++ Fine-tune the PiNet2-P3 models by CP2K lables
+Change the hyperparameters in nextflow/acle-cp2k-from-user-model.nf according to your task, especially the four tolerances (frmsetol, ermsetol, fmaxtol, emaxtol) for convergence check.
+If disk space is limited, uncommenting the _nx_inp_ channel in acle-cp2k-from-user-model.nf to delete some intermediate files is a good option.
+Then, we can start the fine-tuning.
+```
+cd 3_PiNet2_ft
+nextflow run main.nf -profile alvisacle -bg > log.out
+```
++ Product equilibrium MD simulations by the fine-tuned PiNet2-P3 models
+Copy the fine-tuned models into 4_MD_equ/models-ft folder, and run the simulations
+```
+cd 4_MD_equ
+nextflow run nvt_md_pinet2.nf -profile alvispinn -bg > log.out
+```
+Then, we can analyze the trajectories to get the concerned quantities (e.g., RDF and MSD).
+```
+python analyse.py
+```
++ Product non-equilibrium MD simulations by the fine-tuned PiNet2-P3 models
+  coming soon..
++ Plot the figures
+```
+cd 6_Plotting
+python plotting.py
+```
