@@ -8,7 +8,7 @@ params.md_init = "./geo/*.vasp"
 params.md_ps = 1000         // length of NVT simulation
 
 model_config = Channel.fromPath(params.md_init)
-               .combine(Channel.of(330))
+               .combine(Channel.of(330,400,500))
 
 workflow {
     pinn_nvt(model_config)

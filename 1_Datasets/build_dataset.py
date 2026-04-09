@@ -10,7 +10,7 @@ def build_dataset_from_mace_traj():
     time_span = 0.4 # ps
     data = {'e_data':[], 'f_data':[], 'elems':[], 'coord':[], 'cell':[]}
 
-    for subdir_name in ["1_MACE-r2scan-330K", "2_MACE-r2scan-400K", "3_MACE-r2scan-500K"]:
+    for subdir_name in ["MACE-r2scan-330K", "MACE-r2scan-400K", "MACE-r2scan-500K"]:
 
         traj_file = ""
         log_file = ""
