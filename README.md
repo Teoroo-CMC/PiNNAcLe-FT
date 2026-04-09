@@ -9,16 +9,16 @@ PiNNAcLe-Proton-aq/
 │   ├── geo/                                 # The input structures of liquid water with an excess proton
 │   │   ├── wat64_h3o+.vasp                  # In the vasp format
 │   │   └── wat64_h3o+.xyz                   # In the ASE extxyz format                                       
-│   ├── MACE-r2scan-<...>/                   # The NVT trajectories of FM at the temerature of <...>
+│   ├── MACE-r2scan-<...>/                   # The NVT trajectories at the temerature of <...>
 │   │   ├── NVT-<...>-1000ps-wat64_h3o+.log  # The placeholder for the ASE trajectory log file
 │   │   └── NVT-<...>-1000ps-wat64_h3o+.traj # The placeholder for the ASE trajectory file
-│   ├── mix_dataset/                         # The final FM dataset in the Tensorflow dataset format
+│   ├── mix_dataset/                         # The final dataset in the Tensorflow dataset format
 │   │   ├── mixProton_330K_400K_500K.yml     # The configuration file of the dataset
 │   │   └── mixProton_330K_400K_500K.tfr     # The record file of the dataset   
-│   ├── nvt_md_mace_r2scan.nf                # The Nextflow script to run MD simulation by mace-matpes-r2scan-0 FM
+│   ├── nvt_md_mace_r2scan.nf                # The Nextflow script for MD driven by mace-matpes-r2scan-0 FM
 │   ├── nextflow.config                      # The configuration file of Nextflow on the Alvis platform
-│   └── build_dataset.py                     # The python code to collected samples from the trajectories
-├── 2_PiNet2_init/                           # Directory: the initial PiNet2-P3 model trained on FM datasets
+│   └── build_dataset.py                     # The python code to build the dataset
+├── 2_PiNet2_init/                           # Directory: the initial PiNet2-P3 models trained on FM datasets
 │   ├── PiNet2_Seed*_Init/                   # The three PiNet2-P3 models      
 │   │   ├── eval/events.<...>                # The validation event file
 │   │   ├── checkpoint                       # The file storing the paths of actual checkpoint files
@@ -26,7 +26,20 @@ PiNNAcLe-Proton-aq/
 │   │   ├── graph.pbtxt                      # The text-format file of TensorFlow computation graph
 │   │   ├── events.<...>                     # The training event files
 │   │   └── model.ckpt-<...>                 # The actual Tensorflow checkpoint files
-│   └── build_pinet2.py                      # The python code to train the PiNet2-P3 models 
+│   └── build_pinet2.py                      # The python code to train PiNet2-P3 models
+├── 3_PiNet2_ft/                             # Directory: the fine-tuning of initial PiNet2-P3 models
+│   │                                          based on the PiNNAcLe workflow developed by Yunqi
+│   │                                          (https://github.com/yqshao-archive/pinnacle)
+│   ├── output-cp2k-from-model-seed*/        # The output of the PiNNAcLe workflow
+│   │   ├── md/                              # The information of MD simulation in each generation
+│   │   │   └── gen<...>/wat64_h3o+/asemd.log # The ASE trajectory log file in generation <...>
+│   │   ├── models/                          # The information of MD simulation in each generation
+│   │   │   ├── gen<...>/model1/pinn.log     # The validation log file for models in generation <...>
+│   │   │   └── gen<...>/model1/append.log   # The predicted net force per atom by models on current datasets
+│   ├── input/cp2k/r2SCAN-sp.inp             # The input file for single point calculation by CP2K
+│   ├── nextflow/                            # The modified Nextflow scripts based that in PiNNAcLe package
+│   │   │   ├── module/
+│   │   │   │   ├── module
 
 ```
 # Installation
