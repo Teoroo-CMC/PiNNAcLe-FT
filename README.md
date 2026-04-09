@@ -121,7 +121,7 @@ After the simulations finished, move the trajectory files to the corresponding s
 ```
 python build_dataset.py
 ```
-+ Train the initial PiNet2-P3 models
++ Train the initial PiNet2-P3 models (by slurm)
 ```
 cd ../2_PiNet2_init
 python build_pinet2.py  # using the build_model function, and change the random seed manully
