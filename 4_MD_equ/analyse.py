@@ -729,13 +729,13 @@ if __name__ == '__main__':
     # cal_rdf_by_atom_zzy(traj_obj, species1="O", species2="O")
     # cal_rdf_by_atom_zzy(traj_obj, species1="O", species2="H")
 
-    # cal_rdf_by_species_zzy(traj_obj, traj_res, species1="H+", species2="O")
-    # cal_rdf_by_species_zzy(traj_obj, traj_res, species1="O+", species2="H")
-    # cal_rdf_by_species_zzy(traj_obj, traj_res, species1="O+", species2="O")
-    # cal_rdf_by_species_zzy(traj_obj, traj_res, species1="O", species2="O")
+    cal_rdf_by_species_zzy(traj_obj, traj_res, species1="H+", species2="O")
+    cal_rdf_by_species_zzy(traj_obj, traj_res, species1="O+", species2="H")
+    cal_rdf_by_species_zzy(traj_obj, traj_res, species1="O+", species2="O")
+    cal_rdf_by_species_zzy(traj_obj, traj_res, species1="O", species2="O")
 
     # cal_species_atom_number(traj_obj, traj_time, traj_res)
 
     ## Step 4: MSD and PMSD
-    # cal_msd_by_atom_zzy(traj_obj, traj_time, species="O")
+    cal_msd_by_atom_zzy(traj_obj, traj_time, species="O")
     cal_msd_proton_zzy(traj_obj, traj_time, traj_res, "nearestOxyg")

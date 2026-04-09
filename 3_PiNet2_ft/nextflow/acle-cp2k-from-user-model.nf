@@ -22,7 +22,7 @@ def logger (msg) {
 // entrypoint parameters ==================================================================
 params.proj = 'Proton'
 params.publish       = 'output-cp2k-from-model-seed1'   // output folder name, change the seed manuly
-params.init_geo      = '../1_Datasets/geo/wat64_h3o+.xyz' // XYZ files
+params.init_geo      = '../1_Datasets/geo/*.xyz' // XYZ files
 params.init_model    = '../2_PiNet2_init/PiNet2_Seed1_Init/' // change the seed manuly
 params.init_ds       = '/dev/null' //in this case, make sure the sp_points*valid_split_ratio >= 1, otherwise no model training
 params.init_time     = 5.0 // initial MD time

@@ -41,11 +41,6 @@ process pinn_nvt {
     macemp = mace_mp(model="mace-matpes-r2scan-0", device="cuda")
     atoms.set_calculator(macemp)
 
-    # minimize the energy to avoid the extremely large T at the begining of md
-    # from ase.optimize import BFGS
-    # opt = BFGS(atoms)
-    # opt.run(fmax=0.05)
-
     dTemp = $temp
     MaxwellBoltzmannDistribution(atoms, dTemp*units.kB)
     dt = 0.5 * units.fs
