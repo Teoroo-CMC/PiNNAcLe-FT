@@ -169,7 +169,7 @@ def get_ener_force_metrics(nSeed):
     from pinn.io import load_tfrecord
     from setting import proj_params
 
-    dataset = load_tfrecord(str(proj_params["dataset_dir"] / "mixProton_330K_400K_500K.yml"))
+    dataset = load_tfrecord(str(proj_params["dataset_dir"] / "mix_dataset" / "mixProton_330K_400K_500K.yml"))
     fields = ['elems', 'coord', 'cell', 'e_data', 'f_data']
     refData = {k: [] for k in fields}
     for example in dataset:
@@ -181,7 +181,7 @@ def get_ener_force_metrics(nSeed):
 
     # get predictions 
 
-    strModelPath = proj_params["pinet2_init_dir"] + f"PiNet2_Seed{nSeed}_Init"
+    strModelPath = str(proj_params["pinet2_init_dir"] / f"PiNet2_Seed{nSeed}_Init")
     calc = get_calc(strModelPath)
     calc.properties = ['energy', 'force']
 
@@ -228,6 +228,4 @@ if __name__ == '__main__':
     build_model(random_seed)
     
     # compute the predictive performance to help use determining the hyper-parameters in Pinnacle
-    # get_ener_force_metrics(1)
-    # get_ener_force_metrics(2)
-    # get_ener_force_metrics(4)
+    get_ener_force_metrics(random_seed)
