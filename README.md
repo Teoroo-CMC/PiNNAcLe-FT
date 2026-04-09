@@ -31,7 +31,7 @@ PiNNAcLe-Proton-aq/
 │   │                                          based on the PiNNAcLe workflow developed by Yunqi
 │   │                                          (https://github.com/yqshao-archive/pinnacle)
 │   ├── io                                   # The modified python files for io from the tips package
-│   │                                           (https://github.com/yqshao-archive/tips/tree/main)
+│   │   │                                       (https://github.com/yqshao-archive/tips/tree/main)
 │   │   ├── cp2klog.py                       # Read the information from CP2K log file
 │   │   └── ase.py.py                        # Read the information from ASE trajectory file
 │   ├── output-cp2k-from-model-seed*/        # The output of the PiNNAcLe workflow
@@ -65,8 +65,8 @@ PiNNAcLe-Proton-aq/
 │   │   ├── PiNet2_Seed*_ft/
 │   │   │   ├── <...>.rdf                    # The RDF results between given species pairs
 │   │   │   ├── wat64_h3o+-330K-O-zzy.msd    # The MSD results of all oxygen atoms
-│   │   │   └── wat64_h3o+-330K-proton-zzy-nearestOxyg  # The MSD results of proton
-│   │   │                                                (represented by the oxygen in hydronium)
+│   │   └── └── wat64_h3o+-330K-proton-zzy-nearestOxyg # The MSD results of proton
+│   │                                                  (represented by the oxygen in hydronium)
 │   ├── nvt_md_pinet2.nf                     # The Nextflow script for MD driven by PiNet2-P3 models
 │   ├── nextflow.config                      # The configuration file of Nextflow for MD by PiNet2-P3 models
 │   └── analyse.py                           # The python code to analyse the trajectories
