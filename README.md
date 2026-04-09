@@ -131,7 +131,7 @@ After the training finished, estimate the performance of PiNet2-P3 models on ene
 python build_pinet2.py # using the get_ener_force_metrics function, and change the random seed manully
 ```
 + Fine-tune the PiNet2-P3 models by CP2K lables
-Change the hyperparameters in nextflow/acle-cp2k-from-user-model.nf according to your task, especially the four tolerances (frmsetol, ermsetol, fmaxtol, emaxtol) for convergence check.
+<br> Change the hyperparameters in nextflow/acle-cp2k-from-user-model.nf according to your task, especially the four tolerances (frmsetol, ermsetol, fmaxtol, emaxtol) for convergence check.
 <br> If disk space is limited, uncommenting the _nx_inp_ channel in acle-cp2k-from-user-model.nf to delete some intermediate files is a good option.
 <br> Then, we can start the fine-tuning
 ```
@@ -139,7 +139,7 @@ cd 3_PiNet2_ft
 nextflow run main.nf -profile alvisacle -bg > log.out
 ```
 + Product equilibrium MD simulations by the fine-tuned PiNet2-P3 models
-Copy the fine-tuned models into 4_MD_equ/models-ft folder, and run the simulations
+<br> Copy the fine-tuned models into 4_MD_equ/models-ft folder, and run the simulations
 ```
 cd 4_MD_equ
 nextflow run nvt_md_pinet2.nf -profile alvispinn -bg > log.out
@@ -149,7 +149,7 @@ Then, we can analyze the trajectories to get the concerned quantities (e.g., RDF
 python analyse.py
 ```
 + Product non-equilibrium MD simulations by the fine-tuned PiNet2-P3 models
-  coming soon..
+  <br> coming soon..
 + Plot the figures
 ```
 cd 6_Plotting
