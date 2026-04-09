@@ -228,4 +228,4 @@ if __name__ == '__main__':
     build_model(random_seed)
     
     # compute the predictive performance to help use determining the hyper-parameters in Pinnacle
-    get_ener_force_metrics(random_seed)
+    # get_ener_force_metrics(random_seed)
