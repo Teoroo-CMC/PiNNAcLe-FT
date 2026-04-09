@@ -223,6 +223,7 @@ def get_ener_force_metrics(nSeed):
 if __name__ == '__main__':
 
     # build initial PiNet2 models on the MACE datasets
+    # execute by slurm
     random_seed = 1 # [1,2,4]
     build_model(random_seed)
     
