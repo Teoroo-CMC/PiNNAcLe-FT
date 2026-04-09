@@ -132,8 +132,8 @@ python build_pinet2.py # using the get_ener_force_metrics function, and change t
 ```
 + Fine-tune the PiNet2-P3 models by CP2K lables
 Change the hyperparameters in nextflow/acle-cp2k-from-user-model.nf according to your task, especially the four tolerances (frmsetol, ermsetol, fmaxtol, emaxtol) for convergence check.
-If disk space is limited, uncommenting the _nx_inp_ channel in acle-cp2k-from-user-model.nf to delete some intermediate files is a good option.
-Then, we can start the fine-tuning.
+<br> If disk space is limited, uncommenting the _nx_inp_ channel in acle-cp2k-from-user-model.nf to delete some intermediate files is a good option.
+<br> Then, we can start the fine-tuning
 ```
 cd 3_PiNet2_ft
 nextflow run main.nf -profile alvisacle -bg > log.out
