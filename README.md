@@ -1,10 +1,10 @@
-# PiNNAcLe-Proton-aq
-This is the repository for the datasets, the computational workflows and outputs associate with the preprint "Reactive and Polarizable Molecular Dynamics of the Excess Proton in Water with Machine Learning Interatomic Potentials"
+# PiNNAcLe-FT
+This is the repository for foundation model distillation and fine-tuning (FT) workflows with PiNNAcLe. The demonstration example is the H3O+(aq) system, where we have used MACE-MatPES-r2SCAN as the foundation model and CP2K as the DFT-labeller in the FT. If you are inspired by PiNNAcle-FT or interested to use it, please refer to the associated publication: Zhan-Yun Zhang, Alicia van Hess, Linnéa Andersson, and Chao Zhang, "Molecular Dynamics of the Excess Proton in Water with Reactive and Polarizable Machine Learning Interatomic Potentials", 2026. 
 
 # Project structure
 In the following project structure, _*_ denotes the random seed, _<...>_ indicates an arbitrary sequence of characters.
 ```text
-PiNNAcLe-Proton-aq/
+PiNNAcLe-FT/
 ├── 1_Datasets/                              # Directory: the datasets built from the FM trajectories
 │   ├── geo/                                 # The input structures of liquid water with an excess proton
 │   │   ├── wat64_h3o+.vasp                  # In the vasp format
