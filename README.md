@@ -1,5 +1,25 @@
 # PiNNAcLe-FT
-This is an update to the PiNNAcLe repository (https://github.com/Teoroo-CMC/PiNNAcLe) introducing support for fine-tuning (FT) of pre-trained user models. These models are typically obtained via a foundation model distillation strategy and enable stable long-timescale molecular dynamics (MD) simulations. With this enhancement, the extended version achieves higher sampling efficiency and faster convergence.
+This is an update to the PiNNAcLe repository (https://github.com/Teoroo-CMC/PiNNAcLe) introducing support for fine-tuning (FT) of pre-trained models at the DFT level.
+
+# What’s New
++ Eliminates the need to construct a large initial DFT dataset.
++ Enables workflows to start from a pre-trained model rather than from scratch.
++ Automatically switch the models from the pre-training level (e.g., foundation model level) to the fine-tuning level (i.e., DFT level).
+
+# Motivation
++ The original PiNNAcLe workflow starts from scratch, requiring a large initial DFT dataset to build PiNet2 models in the first generation (i.e., gen0).
++ Constructing a large DFT dataset is a time-consuming and inefficient process.
++ If the initial DFT dataset is insufficient or lacks conformational diversity, unstable PiNet2-driven MD simulations in gen0 can slow down both DFT labeling and training convergence.
+
+# Approach
++ Construct a large and conformationally diverse dataset for target systems using low-cost, state-of-the-art foundation models (e.g., https://github.com/acesuit/mace).
++ Pre-train PiNet2 models on the constructed dataset, and ensure stable MD simulations can be acheived by using them.
++ Initiate the PiNNAcLe-FT workflow to fine-tune the pre-trained PiNet2 models at the target DFT level.
+
+# Quick start
++ training model
++ change hyper-parameters
++ run PiNNacle
 
 # Project structure
 In the following project structure, _*_ denotes the random seed, _<...>_ indicates an arbitrary sequence of characters.
