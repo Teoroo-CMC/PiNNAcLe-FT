@@ -1,5 +1,5 @@
 # PiNNAcLe-FT
-This is the repository for foundation model distillation and fine-tuning (FT) workflows with PiNNAcLe. The demonstration example is the H3O+(aq) system, where we have used MACE-MatPES-r2SCAN as the foundation model and CP2K as the DFT-labeller in the FT. If you are inspired by PiNNAcLe-FT or interested to use it, please refer to the associated publication: Zhan-Yun Zhang, Alicia van Hess, Linnéa Andersson, and Chao Zhang, "Molecular Dynamics of the Excess Proton in Water with Reactive and Polarizable Machine Learning Interatomic Potentials", 2026. 
+This is an update to the PiNNAcLe repository (https://github.com/Teoroo-CMC/PiNNAcLe) introducing support for fine-tuning (FT) of pre-trained user models. These models are typically obtained via a foundation model distillation strategy and enable stable long-timescale molecular dynamics (MD) simulations. With this enhancement, the extended version achieves higher sampling efficiency and faster convergence.
 
 # Project structure
 In the following project structure, _*_ denotes the random seed, _<...>_ indicates an arbitrary sequence of characters.
