@@ -22,8 +22,8 @@ def logger (msg) {
 // entrypoint parameters ==================================================================
 params.proj = 'Proton'
 params.publish       = 'output-cp2k-from-model-seed1'   // output folder name, change the seed manuly
-params.init_geo      = '../1_Datasets/geo/*.xyz' // XYZ files
-params.init_model    = '../2_PiNet2_init/PiNet2_Seed1_Init/' // change the seed manuly
+params.init_geo      = 'input/geo/*.xyz' // XYZ files
+params.init_model    = 'input/models/PiNet2_Seed1_Init/' // change the seed manuly
 params.init_ds       = '/dev/null' //in this case, make sure the sp_points*valid_split_ratio >= 1, otherwise no model training
 params.init_time     = 5.0 // initial MD time
 params.init_steps    = 5000000 // initial training time for mlp, the already trained steps should be added
@@ -60,7 +60,7 @@ params.retrain_step  = 5000
 params.acc_fac       = 2.0 // multiplier for the next MD simulation time if the last gen converged
 params.brake_fac     = 1.0 // multiplier for the next MD simulation time if the last gen not converged
 params.filters       = "--filter 'abs(force)<1000.0'" // filter used in check and dsmix
-params.root_path     = "{your_own_path}/PiNNAcLe-Proton-aq/3_PiNet2_ft" // the root path for release_space
+params.root_path     = "{your_own_path}/PiNNAcLe-FT" // the root path for release_space
 params.change_edress = true // changing the e_dress of PiNet2 model (e.g., from MACE-r2SCAN to DFT-r2SCAN), which used for the changing of energy level
 //========================================================================================
 
@@ -242,7 +242,7 @@ workflow loop {
   check.out.subscribe {name, geo, msg -> logger("[$name] ${msg.trim()}")}
   nx_inp.subscribe {logger("[gen${it[0].toInteger()-1}] next time scale ${it[5]} ps, ${it[6] ? 'next no training planned' : 'next training step '+it[4]}."+'\n'+'-'*80) } \
 
-  // delete some intermedate data to save disk space ======================================
+  // Uncomment the following three lines to delete intermediate files and save disk space when storage is limited==
   //nx_inp \
   //  | map { it -> tuple(params.root_path, it[0], file(params.publish)) } \
   //  | release_space
