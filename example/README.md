@@ -37,6 +37,6 @@ nextflow run main.nf -profile alvis -bg > log.out
 ```
 # Plot the fine-tuning curve
 ```
-cd 4_plotting
+cd ../4_plotting
 python plotting.py
 ```
