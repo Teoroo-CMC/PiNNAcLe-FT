@@ -1,19 +1,19 @@
 # PiNNAcLe-FT
-This is an update to the PiNNAcLe repository (https://github.com/Teoroo-CMC/PiNNAcLe) introducing support for fine-tuning (FT) of pre-trained models at the DFT level.
+PiNNAcle (https://github.com/Teoroo-CMC/PiNNAcLe) was originaly developed for active learn-on-the-fly tasks in machine learning interatomic potential (MLIPs). PiNNAcLe-FT is an extension of PiNNAcLe for efficient foundational model distillation and fine-tuning with DFT labels. 
 
 # What’s New
-+ Eliminate the need to construct a large initial DFT dataset.
-+ Enable workflows to start from a pre-trained model rather than from scratch.
++ Eliminate the need to construct a large initial DFT dataset and ensure stable dynamics of gen0 model via foundation model distillation.
++ Enable workflows to start from a pre-trained model (gen0) via atomic address matching between foundation model and DFT labeller.
 
 # Motivation
-+ The original PiNNAcLe workflow starts from the scratch, requiring a large initial DFT dataset to build PiNet2-P3 models in the first generation (i.e., gen0).
-+ However, constructing a large DFT dataset is a time-consuming and inefficient process.
-+ Insufficient initial DFT data or limited conformational diversity can lead to unstable PiNet2-driven MD simulations, thereby slowing down both DFT labeling and model convergence.
++ The original PiNNAcLe workflow requires a large initial DFT dataset to build PiNet2-P3 models in the first generation, i.e., gen0 model.
++ Constructing a large DFT dataset is a time-consuming and inefficient process.
++ Insufficient initial DFT data or limited conformational diversity often leads to unstable gen0 model, thereby slowing down both subsequent DFT labelling and model convergence in the PiNNAcLe.
 
 # Approach
-+ Construct a large and conformationally diverse dataset for target systems using low-cost, state-of-the-art foundation models (e.g., https://github.com/acesuit/mace).
-+ Pre-train PiNet2-P3 models on the constructed dataset (i.e., model distillation), and ensure stable MD simulations can be achieved by using them.
-+ Initiate the PiNNAcLe-FT workflow to fine-tune the pre-trained PiNet2-P3 models at the target DFT level.
++ Construct a diverse dataset for target systems using low-cost foundation models (e.g., MACE-MP-0, https://github.com/ACEsuit/mace-foundations).
++ Pre-train PiNet2-P3 models on this dataset for the gen0 model, i.e. foundation model distillation.
++ Initiate the PiNNAcLe-FT workflow to fine-tune the pre-trained PiNet2-P3 models with DFT labels and the matched atomic address.
 
 # Installation
 + Download the PiNNAcLe-FT repo
