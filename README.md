@@ -3,7 +3,7 @@ PiNNAcLe (https://github.com/Teoroo-CMC/PiNNAcLe) was originaly developed for ac
 
 # What’s New
 + Eliminate the need to construct a large initial DFT dataset and ensure stable dynamics of gen0 model via foundation model distillation.
-+ Enable workflows to start from a pre-trained model (gen0) via atomic address matching between foundation model and DFT labeller.
++ Enable workflows to start from a pre-trained model (gen0) via atomic dress matching between foundation model and DFT labeller.
 
 # Motivation
 + The original PiNNAcLe workflow requires a large initial DFT dataset to build PiNet2-P3 models in the first generation, i.e., gen0 model.
@@ -13,7 +13,7 @@ PiNNAcLe (https://github.com/Teoroo-CMC/PiNNAcLe) was originaly developed for ac
 # Approach
 + Construct a diverse dataset for target systems using low-cost foundation models (e.g., MACE-MP-0, https://github.com/ACEsuit/mace-foundations).
 + Pre-train PiNet2-P3 models on this dataset for the gen0 model, i.e. foundation model distillation.
-+ Initiate the PiNNAcLe-FT workflow to fine-tune the pre-trained PiNet2-P3 models with DFT labels and the matched atomic address.
++ Initiate the PiNNAcLe-FT workflow to fine-tune the pre-trained PiNet2-P3 models with DFT labels and the matched atomic dress.
 
 # Installation
 + Download the PiNNAcLe-FT repo
