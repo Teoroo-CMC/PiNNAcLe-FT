@@ -4,8 +4,9 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
 
-WORK_DIR = Path(os.getcwd())
-FT_DIR = WORK_DIR.parent / "3_pinet2_ft"
+EXAMPLE_DIR = Path("{your_PiNNAcLe_FT_Path}/example")
+WORK_DIR = EXAMPLE_DIR / "4_plotting"
+FT_DIR = EXAMPLE_DIR / "3_pinet2_ft"
 
 # for matplotlib
 listStyles = ['-','--','-.',':']
@@ -24,7 +25,7 @@ plt.rc('xtick', direction='out')
 plt.rc('ytick', direction='out')
 
 # 
-def drawLearningCurve(nSeed):
+def drawFinetuningCurve(nSeed):
 
     import re
     from glob import glob
@@ -213,7 +214,7 @@ def drawLearningCurve(nSeed):
     f.align_ylabels()
     plt.tight_layout()
 
-    strOutFile = WORK_DIR / f"learning_curve_seed{nSeed}.jpg"
+    strOutFile = WORK_DIR / f"finetuning_curve_seed{nSeed}.jpg"
     plt.savefig(fname=strOutFile, dpi=300)
     plt.close()
 
@@ -320,11 +321,11 @@ def drawNetForceAndAtomicDress(nSeed):
 
 if __name__ == '__main__':
 
-    drawLearningCurve(nSeed=1)
+    drawFinetuningCurve(nSeed=1)
     drawNetForceAndAtomicDress(nSeed=1)
 
-    drawLearningCurve(nSeed=2)
+    drawFinetuningCurve(nSeed=2)
     drawNetForceAndAtomicDress(nSeed=2)
 
-    drawLearningCurve(nSeed=4)
+    drawFinetuningCurve(nSeed=4)
     drawNetForceAndAtomicDress(nSeed=4)

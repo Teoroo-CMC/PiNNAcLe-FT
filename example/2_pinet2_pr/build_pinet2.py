@@ -3,8 +3,9 @@ import os
 import numpy as np
 from pathlib import Path
 
-WORK_DIR = Path(os.getcwd())
-DATASET_DIR = WORK_DIR.parent / "1_dataset"
+EXAMPLE_DIR = Path("{your_PiNNAcLe_FT_Path}/example")
+WORK_DIR = EXAMPLE_DIR / "2_pinet2_pr"
+DATASET_DIR = EXAMPLE_DIR / "1_dataset"
 
 # build a Model for potentials
 def build_model(nSeed):

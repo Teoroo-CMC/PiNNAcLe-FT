@@ -2,7 +2,8 @@ import os
 import numpy as np
 from pathlib import Path
 
-WORK_DIR = Path(os.getcwd())
+EXAMPLE_DIR = Path("{your_PiNNAcLe_FT_Path}/example")
+WORK_DIR = EXAMPLE_DIR / "1_dataset"
 
 # uniform sampling the ASE trajectory from MACE foundation models and convert to Tensorfow dataset format
 def build_dataset_from_mace_traj():
