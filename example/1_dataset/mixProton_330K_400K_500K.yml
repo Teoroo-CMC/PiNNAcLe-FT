@@ -1,0 +1,25 @@
+format:
+  cell:
+    dtype: float32
+    shape:
+    - 3
+    - 3
+  coord:
+    dtype: float32
+    shape:
+    - 193
+    - 3
+  e_data:
+    dtype: float32
+    shape: []
+  elems:
+    dtype: int32
+    shape:
+    - 193
+  f_data:
+    dtype: float32
+    shape:
+    - 193
+    - 3
+info:
+  n_sample: 7500
