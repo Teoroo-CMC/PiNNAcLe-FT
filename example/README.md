@@ -23,6 +23,9 @@ python comput_error.py # run by slurm, and change the random seed manully
 ```
 # Fine-tune the PiNet2-P3 models at the CP2K r2SCAN/TZV2P level
 ```
+cd ..
+cp ../main.nf 3_pinet2_ft
+cp ../nextflow.config 3_pinet2_ft
 cp -r ../nextflow/module 3_pinet2_ft/nextflow
 cd 3_pinet2_ft
 ```
