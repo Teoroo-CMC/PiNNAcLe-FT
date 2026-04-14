@@ -1,5 +1,5 @@
 # PiNNAcLe-FT
-PiNNAcle (https://github.com/Teoroo-CMC/PiNNAcLe) was originaly developed for active learn-on-the-fly tasks in machine learning interatomic potential (MLIPs). PiNNAcLe-FT is an extension of PiNNAcLe for efficient foundational model distillation and fine-tuning with DFT labels. 
+PiNNAcLe (https://github.com/Teoroo-CMC/PiNNAcLe) was originaly developed for active learn-on-the-fly tasks in machine learning interatomic potential (MLIPs). PiNNAcLe-FT is an extension of PiNNAcLe for efficient foundational model distillation and fine-tuning with DFT labels. 
 
 # What’s New
 + Eliminate the need to construct a large initial DFT dataset and ensure stable dynamics of gen0 model via foundation model distillation.
