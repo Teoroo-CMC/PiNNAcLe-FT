@@ -14,9 +14,9 @@ PiNNAcLe (https://github.com/Teoroo-CMC/PiNNAcLe) was originaly developed for ac
 + Construct a diverse dataset for target systems using low-cost foundation models (e.g., MACE-MP-0, https://github.com/ACEsuit/mace-foundations).
 + Pre-train PiNet2-P3 models on this dataset for the gen0 model, i.e. foundation model distillation.
 + Initiate the PiNNAcLe-FT workflow to fine-tune the pre-trained PiNet2-P3 models with DFT labels and the matched atomic dress.
-  - In each generation, numbers of new snapshots are collected from the MD trajectory driven by the latest PiNet2-P3 models.
+  - In each generation, a number of new snapshots are collected from the MD trajectory driven by the latest PiNet2-P3 models.
   - The collected snapshots are then labeled using the CP2K package at the predefined DFT level and added to the DFT dataset.
-  - The atomic dresses of the PiNet2-P3 models are updated based on the new training set, and training continues.
+  - The atomic dresses of the PiNet2-P3 model are updated based on the new training set, followed by model fine-tuning.
 
 # Installation
 + Download the PiNNAcLe-FT repo
