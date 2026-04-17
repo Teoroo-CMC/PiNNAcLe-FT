@@ -26,7 +26,7 @@ if not os.path.realpath(strWorkDir).startswith(SAFE_ROOT):
     raise RuntimeError(f"Unsafe work dir: {strWorkDir}")
 
 nKeepGenNum = 1 # at least 1
-listProcDir = ["models", "md", "collect", "label", "check", "merge", "dsmix"]
+listProcDir = ["models", "md"]
 
 # delete the link file and target file
 def removeSymlinkAndTarget(strItemPath):
