@@ -21,14 +21,14 @@ def logger (msg) {
 
 // entrypoint parameters ==================================================================
 params.proj = 'Proton'
-params.publish       = 'output-cp2k-from-model-seed1'   // output folder name, change the seed manuly
+params.publish       = 'output-cp2k-from-model-seed4'   // output folder name, change the seed manuly
 params.init_geo      = 'input/geo/*.xyz' // XYZ files
-params.init_model    = '../2_pinet2_pr/PiNet2_Seed1_Init/' // change the seed manuly
+params.init_model    = '../2_pinet2_pr/PiNet2_Seed4_Init/' // change the seed manuly
 params.init_ds       = '/dev/null' //in this case, make sure the sp_points*valid_split_ratio >= 1, otherwise no model training
 params.init_time     = 5.0 // initial MD time
 params.init_steps    = 5000000 // initial training time for mlp, the already trained steps should be added
 params.ens_size      = 1 // ensamble size of mlp models
-params.restart       = false // is restarting the job?
+params.restart       = false // is restarting the job from generation params.restart_from
 params.restart_from  = 5  // restart from gen5
 params.restart_conv  = true // is the last gen converged? If you want to use your own initial models, set it as true.
 //========================================================================================
@@ -45,9 +45,10 @@ params.min_time      = 5.0 // minimal MD simulation time, used to update the sim
 params.max_time      = 5000.0 // maximal MD simulation time, used to update the simulation time for next gen
 params.md_flags      = '--ensemble nvt --dt 0.5 -t 10 --log-every 100 --T 330'
 // -of idx.xyz: inform tips to convert the asetraj to xyz files using the snapshot index as the file name
-// --nsample: number of sampling snapshots from asetraj, the minimal accept number is 2
+// --nsample: number of sampling snapshots from asetraj
+// --start-idx: to avoid data leakage during testing, some snapshots from the begining of MD should be deleted
 // --filter 'mindist>0.3': only use the snapshots in which the minimal distance between any atom pairs > 0.3
-params.collect_flags = "-f asetraj --subsample uniform --nsample 10 -of idx.xyz -o ds --filter 'mindist>0.3'"
+params.collect_flags = "-f asetraj --subsample uniform --nsample 10 --start-idx 20 -of idx.xyz -o ds --filter 'mindist>0.3'"
 params.sp_points     = 10 // number of single point calculation jobs, usually it = nsample
 params.merge_flags   = '-f cp2klog' // format the single point calculation output file
 params.old_flag      = '--subsample uniform --psample 100' // when mixing the old and new datasets, 240 old samples were used
@@ -59,8 +60,7 @@ params.emaxtol       = 0.0025 // the maximal absolute differnece of energy per a
 params.retrain_step  = 5000
 params.acc_fac       = 2.0 // multiplier for the next MD simulation time if the last gen converged
 params.brake_fac     = 1.0 // multiplier for the next MD simulation time if the last gen not converged
-params.filters       = "--filter 'abs(force)<1000.0'" // filter used in check and dsmix
-params.root_path     = "{your_own_path}/PiNNAcLe-FT" // the root path for release_space
+params.filters       = "--filter 'abs(force)<1000.0'" // used in check and dsmix to remove any structures with DFT force component > 1000 eV/Ang
 params.change_edress = true // changing the e_dress of PiNet2 model (e.g., from MACE-r2SCAN to DFT-r2SCAN), which used for the changing of energy level
 //========================================================================================
 
@@ -72,7 +72,7 @@ include { check } from './module/tips.nf' addParams(publish: "$params.publish/ch
 include { train } from "./module/${params.mlp}.nf" addParams(publish: "$params.publish/models")
 include { md } from "./module/${params.mlp}.nf" addParams(publish: "$params.publish/md")
 include { sp } from "./module/${params.ref}.nf" addParams(publish: "$params.publish/label")
-include { release_space } from "./module/tools.nf" addParams(publish: "$params.publish")
+include { release_space } from "./module/tools.nf" addParams(publish: "$params.publish/tools")
 //========================================================================================
 
 // Entry point
@@ -150,7 +150,6 @@ workflow loop {
             params.train_flags+
             " --seed $seed --train-steps $steps"+
             ((gen.toInteger()==0 || params.change_edress)?" $params.train_init":'')]}\
-    | view()
     | train
 
   train.out.model \
@@ -242,10 +241,11 @@ workflow loop {
   check.out.subscribe {name, geo, msg -> logger("[$name] ${msg.trim()}")}
   nx_inp.subscribe {logger("[gen${it[0].toInteger()-1}] next time scale ${it[5]} ps, ${it[6] ? 'next no training planned' : 'next training step '+it[4]}."+'\n'+'-'*80) } \
 
-  // Uncomment the following three lines to delete intermediate files and save disk space when storage is limited==
-  nx_inp \
-    | map { it -> tuple(params.root_path, it[0], file(params.publish)) } \
-    | release_space
+  // Uncomment the following release_space channel to delete intermediate files and save disk space when storage space is limited.
+  // By default, intermediate files in the "models" and "md" subfolders will be deleted. You can change this setting in the module/tools.nf file.
+  // nx_inp \
+  //   | map { it -> tuple(it[0], file(params.publish)) } \
+  //   | release_space
 
   emit:
   nx_inp

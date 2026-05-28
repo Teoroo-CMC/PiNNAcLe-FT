@@ -69,5 +69,5 @@ if __name__ == '__main__':
 
     # compute the predictive performance to help use determining the hyper-parameters in Pinnacle
     # execute by slurm
-    random_seed = 1 # [1,2,4]
+    random_seed = 4 # [1,2,4]
     get_ener_force_metrics(random_seed)

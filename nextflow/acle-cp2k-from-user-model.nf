@@ -243,9 +243,9 @@ workflow loop {
 
   // Uncomment the following release_space channel to delete intermediate files and save disk space when storage space is limited.
   // By default, intermediate files in the "models" and "md" subfolders will be deleted. You can change this setting in the module/tools.nf file.
-  //nx_inp \
-  //  | map { it -> tuple(it[0], file(params.publish)) } \
-  //  | release_space
+  // nx_inp \
+  //   | map { it -> tuple(it[0], file(params.publish)) } \
+  //   | release_space
 
   emit:
   nx_inp
