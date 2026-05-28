@@ -21,9 +21,9 @@ def logger (msg) {
 
 // entrypoint parameters ==================================================================
 params.proj = 'Proton'
-params.publish       = 'output-cp2k-from-model-seed1'   // output folder name, change the seed manuly
+params.publish       = 'output-cp2k-from-model-seed4'   // output folder name, change the seed manuly
 params.init_geo      = 'input/geo/*.xyz' // XYZ files
-params.init_model    = 'input/models/PiNet2_Seed1_Init/' // change the seed manuly
+params.init_model    = 'input/models/PiNet2_Seed4_Init/' // change the seed manuly
 params.init_ds       = '/dev/null' //in this case, make sure the sp_points*valid_split_ratio >= 1, otherwise no model training
 params.init_time     = 5.0 // initial MD time
 params.init_steps    = 5000000 // initial training time for mlp, the already trained steps should be added

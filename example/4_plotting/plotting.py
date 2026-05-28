@@ -44,16 +44,16 @@ def drawFinetuningCurve(nSeed):
     arrPiNNRMSE = np.array([[g,*e] for g, e in zip(listPiNNLogGen, listValidRMSE)])
     arrPiNNRMSE = arrPiNNRMSE[arrPiNNRMSE[:,0].argsort()]
 
-    # get validation max results
+    # get validation max results with weight > 0.99
     listValidMAX = []
     listPiNNAppendFile = glob(f'{pinnacle_output_dir}/models/gen*/model1/append.log')
     listPiNNAppendGen = [int(re.search('gen(\d+)', l)[1]) for l in listPiNNAppendFile]
     for strFile in listPiNNAppendFile:
         with open(strFile, "r") as f:
             listLines = f.readlines()
-            assert "energy and force measures on validation set" in listLines[1]
-            dEnerValidMax = float(re.search(r"emax=([0-9]+(?:\.[0-9]+)?)", listLines[1])[1])
-            dForceValidMax = float(re.search(r"fmax=([0-9]+(?:\.[0-9]+)?)", listLines[1])[1])
+            assert "after training on eval set with weight > 0.99" in listLines[10]
+            dEnerValidMax = float(re.search(r"emax=([0-9]+(?:\.[0-9]+)?)", listLines[10])[1])
+            dForceValidMax = float(re.search(r"fmax=([0-9]+(?:\.[0-9]+)?)", listLines[10])[1])
             listValidMAX.append([dEnerValidMax, dForceValidMax])
     arrPiNNMAX = np.array([[g,*e] for g, e in zip(listPiNNAppendGen, listValidMAX)])
     arrPiNNMAX = arrPiNNMAX[arrPiNNMAX[:,0].argsort()]
@@ -320,12 +320,6 @@ def drawNetForceAndAtomicDress(nSeed):
 
 
 if __name__ == '__main__':
-
-    drawFinetuningCurve(nSeed=1)
-    drawNetForceAndAtomicDress(nSeed=1)
-
-    drawFinetuningCurve(nSeed=2)
-    drawNetForceAndAtomicDress(nSeed=2)
 
     drawFinetuningCurve(nSeed=4)
     drawNetForceAndAtomicDress(nSeed=4)
