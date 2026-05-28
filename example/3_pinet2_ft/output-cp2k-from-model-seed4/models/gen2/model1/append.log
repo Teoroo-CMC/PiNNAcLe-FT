@@ -1,0 +1,12 @@
+before training on train set all samples: energy: emax=2.7424708549119714 meV/Atom, ermse=1.8085131787160276 meV/Atom;force: fmax=162.95194625854492 meV/Ang, frmse=28.501536697149277 meV/Ang
+before training on train set with weight > 0.99: energy: emax=2.7424708549119714 meV/Atom, ermse=1.8085131787160276 meV/Atom;force: fmax=162.95194625854492 meV/Ang, frmse=28.501536697149277 meV/Ang
+before training on train set with weight < 0.1: No valid samples in this mask.
+before training on eval set all samples: energy: emax=2.2465997409142346 meV/Atom, ermse=1.9415815603049604 meV/Atom;force: fmax=143.6663568019867 meV/Ang, frmse=28.66210602223873 meV/Ang
+before training on eval set with weight > 0.99: energy: emax=2.2465997409142346 meV/Atom, ermse=1.9415815603049604 meV/Atom;force: fmax=143.6663568019867 meV/Ang, frmse=28.66210602223873 meV/Ang
+before training on eval set with weight < 0.1: No valid samples in this mask.
+after training on train set all samples: energy: emax=2.0442033678591542 meV/Atom, ermse=1.629173816879022 meV/Atom;force: fmax=114.48507010936737 meV/Ang, frmse=23.828716948628426 meV/Ang
+after training on train set with weight > 0.99: energy: emax=2.0442033678591542 meV/Atom, ermse=1.629173816879022 meV/Atom;force: fmax=114.48507010936737 meV/Ang, frmse=23.828716948628426 meV/Ang
+after training on train set with weight < 0.1: No valid samples in this mask.
+after training on eval set all samples: energy: emax=1.781088082907445 meV/Atom, ermse=1.4520617430785605 meV/Atom;force: fmax=113.38427662849426 meV/Ang, frmse=29.495198279619217 meV/Ang
+after training on eval set with weight > 0.99: energy: emax=1.781088082907445 meV/Atom, ermse=1.4520617430785605 meV/Atom;force: fmax=113.38427662849426 meV/Ang, frmse=29.495198279619217 meV/Ang
+after training on eval set with weight < 0.1: No valid samples in this mask.

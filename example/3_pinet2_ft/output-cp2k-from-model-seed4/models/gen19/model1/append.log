@@ -1,0 +1,12 @@
+before training on train set all samples: energy: emax=19.49077072541172 meV/Atom, ermse=2.5975431283141774 meV/Atom;force: fmax=1744.629144668579 meV/Ang, frmse=30.764466151595116 meV/Ang
+before training on train set with weight > 0.99: energy: emax=2.327558290176057 meV/Atom, ermse=1.626065402867715 meV/Atom;force: fmax=159.19852256774902 meV/Ang, frmse=26.491954922676086 meV/Ang
+before training on train set with weight < 0.1: energy: emax=19.49077072541172 meV/Atom, ermse=18.80060361446091 meV/Atom;force: fmax=1744.629144668579 meV/Ang, frmse=147.02919125556946 meV/Ang
+before training on eval set all samples: energy: emax=2.2567195595968315 meV/Atom, ermse=1.653107872469037 meV/Atom;force: fmax=184.9048137664795 meV/Ang, frmse=26.685014367103577 meV/Ang
+before training on eval set with weight > 0.99: energy: emax=2.2567195595968315 meV/Atom, ermse=1.653107872469037 meV/Atom;force: fmax=184.9048137664795 meV/Ang, frmse=26.685014367103577 meV/Ang
+before training on eval set with weight < 0.1: No valid samples in this mask.
+after training on train set all samples: energy: emax=23.569057642504276 meV/Atom, ermse=3.1090068380974527 meV/Atom;force: fmax=1756.0679912567139 meV/Ang, frmse=30.13083152472973 meV/Ang
+after training on train set with weight > 0.99: energy: emax=2.6109132124361167 meV/Atom, ermse=1.9023005449151722 meV/Atom;force: fmax=172.2082942724228 meV/Ang, frmse=25.662442669272423 meV/Ang
+after training on train set with weight < 0.1: energy: emax=23.569057642504276 meV/Atom, ermse=22.81780683401001 meV/Atom;force: fmax=1756.0679912567139 meV/Ang, frmse=148.23704957962036 meV/Ang
+after training on eval set all samples: energy: emax=2.3376781088302323 meV/Atom, ermse=1.8998666042016819 meV/Atom;force: fmax=178.11083793640137 meV/Ang, frmse=26.25689096748829 meV/Ang
+after training on eval set with weight > 0.99: energy: emax=2.3376781088302323 meV/Atom, ermse=1.8998666042016819 meV/Atom;force: fmax=178.11083793640137 meV/Ang, frmse=26.25689096748829 meV/Ang
+after training on eval set with weight < 0.1: No valid samples in this mask.

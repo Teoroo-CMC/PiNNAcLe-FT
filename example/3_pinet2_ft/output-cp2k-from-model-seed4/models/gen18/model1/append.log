@@ -1,0 +1,12 @@
+before training on train set all samples: energy: emax=20.816466968909708 meV/Atom, ermse=2.4270021837023914 meV/Atom;force: fmax=1798.0960607528687 meV/Ang, frmse=31.158646568655968 meV/Ang
+before training on train set with weight > 0.99: energy: emax=1.6090511657864681 meV/Atom, ermse=0.9308899338982562 meV/Atom;force: fmax=191.9936239719391 meV/Ang, frmse=26.430152356624603 meV/Ang
+before training on train set with weight < 0.1: energy: emax=20.816466968909708 meV/Atom, ermse=20.193885759128737 meV/Atom;force: fmax=1798.0960607528687 meV/Ang, frmse=150.8493423461914 meV/Ang
+before training on eval set all samples: energy: emax=1.1637791450880286 meV/Atom, ermse=0.8414946821595373 meV/Atom;force: fmax=135.9497308731079 meV/Ang, frmse=25.899823755025864 meV/Ang
+before training on eval set with weight > 0.99: energy: emax=1.1637791450880286 meV/Atom, ermse=0.8414946821595373 meV/Atom;force: fmax=135.9497308731079 meV/Ang, frmse=25.899823755025864 meV/Ang
+before training on eval set with weight < 0.1: No valid samples in this mask.
+after training on train set all samples: energy: emax=19.32885362694492 meV/Atom, ermse=2.6516126657407635 meV/Atom;force: fmax=1744.6269989013672 meV/Ang, frmse=30.903277918696404 meV/Ang
+after training on train set with weight > 0.99: energy: emax=2.5704339378194163 meV/Atom, ermse=1.6655656346232999 meV/Atom;force: fmax=184.9360466003418 meV/Ang, frmse=26.395687833428383 meV/Ang
+after training on train set with weight < 0.1: energy: emax=19.32885362694492 meV/Atom, ermse=18.643666951525784 meV/Atom;force: fmax=1744.6269989013672 meV/Ang, frmse=147.02865481376648 meV/Ang
+after training on eval set all samples: energy: emax=2.013843911896629 meV/Atom, ermse=1.52766624390569 meV/Atom;force: fmax=139.19413089752197 meV/Ang, frmse=26.618121191859245 meV/Ang
+after training on eval set with weight > 0.99: energy: emax=2.013843911896629 meV/Atom, ermse=1.52766624390569 meV/Atom;force: fmax=139.19413089752197 meV/Ang, frmse=26.618121191859245 meV/Ang
+after training on eval set with weight < 0.1: No valid samples in this mask.
