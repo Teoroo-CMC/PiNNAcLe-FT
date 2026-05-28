@@ -8,7 +8,7 @@ process release_space {
   publishDir "$params.publish/$name"
 
   input:
-    tuple (val(root_dir),val(gen),path(output_dir))
+    tuple (val(gen),path(output_dir))
 
   script:
     """
@@ -17,13 +17,7 @@ import os
 import shutil
 import numpy as np
 
-# safe root to avoid deleting other directory
-SAFE_ROOT = "$root_dir"
-
-strWorkDir = "$output_dir"
-strWorkDir = os.path.abspath(strWorkDir)
-if not os.path.realpath(strWorkDir).startswith(SAFE_ROOT):
-    raise RuntimeError(f"Unsafe work dir: {strWorkDir}")
+strWorkDir = os.path.abspath("${output_dir}")
 
 nKeepGenNum = 1 # at least 1
 listProcDir = ["models", "md"]
@@ -59,7 +53,7 @@ def recursiveRemove(strSubDir):
         return
     listItems = os.listdir(strSubDir)
     for strItem in listItems:
-        if "pinn.log" in strItem or "append.log" in strItem or "asemd.log" in strItem: # keep pinn.log and asemd.log
+        if ".log" in strItem or ".csv" in strItem: # keep pinn.log and asemd.log
             continue
         strItemPath = os.path.join(strSubDir, strItem)
         if os.path.islink(strItemPath):

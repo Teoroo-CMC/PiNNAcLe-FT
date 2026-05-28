@@ -10,16 +10,54 @@ process train {
   output:
     tuple val(name), path('model', type:'dir'), emit: model
     tuple val(name), path('pinn.log'), emit: log
-    path('append.log') // publish only
+    path('append.log')         // publish only
+    path('weight-train.csv')   // publish only
+    path('weight-eval.csv')    // publish only
+    path('*.{tfr,yml}')        // publish only
 
   script:
+    fmaxtol = params.fmaxtol
+    emaxtol = params.emaxtol
+    frmsetol = params.frmsetol
+    ermsetol = params.ermsetol
     convert_flag = "${(flags =~ /--seed[\s,\=]\d+/)[0]}"
     train_flags = "${flags.replaceAll(/--seed[\s,\=]\d+/, '')}"
     dataset = (dataset instanceof Path) ? dataset : dataset[0].baseName+'.yml'
     """
-    #!/bin/bash
 
     pinn convert $dataset -o 'train:9,eval:1' $convert_flag
+
+python << 'EOF'
+import os
+from weight_utils import compute_weight
+model_abs_path = os.path.abspath("input")
+ds_abs_path = os.path.dirname(os.path.abspath("${dataset}"))
+tolarence = {"fmaxtol":$fmaxtol, "emaxtol":$emaxtol, "frmsetol":$frmsetol, "ermsetol":$ermsetol}
+compute_weight(model_abs_path, ds_abs_path, "train", tolarence)
+EOF
+
+python << 'EOF'
+import os
+from weight_utils import compute_weight
+model_abs_path = os.path.abspath("input")
+ds_abs_path = os.path.dirname(os.path.abspath("${dataset}"))
+tolarence = {"fmaxtol":$fmaxtol, "emaxtol":$emaxtol, "frmsetol":$frmsetol, "ermsetol":$ermsetol}
+compute_weight(model_abs_path, ds_abs_path, "eval", tolarence)
+EOF
+
+python << 'EOF'
+import os
+from weight_utils import add_weight_to_ds
+ds_abs_path = os.path.dirname(os.path.abspath("${dataset}"))
+add_weight_to_ds(ds_abs_path, "train")
+EOF
+
+python << 'EOF'
+import os
+from weight_utils import add_weight_to_ds
+ds_abs_path = os.path.dirname(os.path.abspath("${dataset}"))
+add_weight_to_ds(ds_abs_path, "eval")
+EOF
 
     if [ ! -f $input/params.yml ];  then
         mkdir -p model; cp $input model/params.yml
@@ -27,92 +65,26 @@ process train {
         cp -rL $input model
     fi
     pinn train model/params.yml --model-dir='model'\
-        --train-ds='train.yml' --eval-ds='eval.yml'\
+        --train-ds='train-weight.yml' --eval-ds='eval-weight.yml'\
         $train_flags
     pinn log model/eval > pinn.log
 
-    python << 'EOF'
-import numpy as np
-from ase import Atoms
-from pinn import get_calc
-from pinn.io import load_tfrecord
-
-fields = ['elems', 'coord', 'cell', 'e_data', 'f_data']
-
-# calculate the net force per atom on whole dataset
-whole_dataset = {k: [] for k in fields}
-for example in load_tfrecord("${dataset}"):
-    for k in fields:
-        whole_dataset[k].append(example[k].numpy())
-
-net_force_x = []
-net_force_y = []
-net_force_z = []
-num_frame = len(whole_dataset['e_data'])
-for i in range(num_frame):
-    num_atom = len(whole_dataset['elems'][i])
-    f_label = whole_dataset['f_data'][i]
-    assert len(f_label[:,0]) == num_atom
-    net_force_x.append(np.abs(np.sum(f_label[:,0]) / num_atom))
-    net_force_y.append(np.abs(np.sum(f_label[:,1]) / num_atom))
-    net_force_z.append(np.abs(np.sum(f_label[:,2]) / num_atom))
-
-msg = []
-net_force_msg = "Net force per atom (meV/Ang/Atom) on whole set,"
-net_force_msg += f"x={1000*np.mean(net_force_x)},"
-net_force_msg += f"y={1000*np.mean(net_force_y)},"
-net_force_msg += f"z={1000*np.mean(net_force_z)}."
-msg.append(net_force_msg)
-
-# calculate the e_max, f_max on validation set
-# based on the code in tips.nf of PiNNAncL, the energy is per atom value
-valid_dataset = {k: [] for k in fields}
-for example in load_tfrecord("eval.yml"):
-    for k in fields:
-        valid_dataset[k].append(example[k].numpy())
-
-calc = get_calc('model')
-calc.properties = ['energy', 'force']
-
-e_label = []
-f_label = []
-e_pred = []
-f_pred = []
-num_frame = len(valid_dataset['e_data'])
-for i in range(0, num_frame):
-
-    num_atom = len(valid_dataset['elems'][i])
-    e_label.append(valid_dataset['e_data'][i] / num_atom)
-    f_label.append(valid_dataset['f_data'][i])
-
-    atoms = Atoms(numbers=valid_dataset['elems'][i],
-                    positions=valid_dataset['coord'][i],
-                    cell=valid_dataset['cell'][i],
-                    pbc=True)
-    atoms.set_calculator(calc)
-
-    e_pred.append(atoms.get_potential_energy() / num_atom)
-    f_pred.append(atoms.get_forces())
-
-e_label = np.array(e_label)
-f_label = np.array(f_label)
-e_pred = np.array(e_pred)
-f_pred = np.array(f_pred)
-
-emax = np.max(np.abs(e_pred-e_label))
-fmax = np.max(np.abs(f_pred-f_label))
-ermse = np.sqrt(np.mean((e_pred-e_label)**2))
-frmse = np.sqrt(np.mean((f_pred-f_label)**2))
-
-thresh_msg = "energy and force measures on validation set, "
-thresh_msg += f"emax={1000*emax} meV/Atom, fmax={1000*fmax} meV/Ang, ermse={1000*ermse} meV/Atom, frmse={1000*frmse} meV/Ang"
-msg.append(thresh_msg)
-
-with open("append.log", "w") as f:
-    for item in msg:
-        print(item, file=f)
-
+python << 'EOF'
+import os
+from weight_utils import analyse_after_train
+model_abs_path = os.path.abspath("model")
+ds_abs_path = os.path.dirname(os.path.abspath("${dataset}"))
+analyse_after_train(model_abs_path, ds_abs_path, "train")
 EOF
+
+python << 'EOF'
+import os
+from weight_utils import analyse_after_train
+model_abs_path = os.path.abspath("model")
+ds_abs_path = os.path.dirname(os.path.abspath("${dataset}"))
+analyse_after_train(model_abs_path, ds_abs_path, "eval")
+EOF
+
     """
 }
 

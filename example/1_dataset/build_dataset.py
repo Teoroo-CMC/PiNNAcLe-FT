@@ -11,7 +11,7 @@ def build_dataset_from_mace_traj():
     from ase.io.trajectory import Trajectory
 
     time_span = 0.4 # ps
-    data = {'e_data':[], 'f_data':[], 'elems':[], 'coord':[], 'cell':[]}
+    data = {'e_data':[], 'f_data':[], 'elems':[], 'coord':[], 'cell':[], 'e_weight':[], 'f_weights':[]}
 
     for subdir_name in ["MACE-r2scan-330K", "MACE-r2scan-400K", "MACE-r2scan-500K"]:
 
@@ -42,6 +42,9 @@ def build_dataset_from_mace_traj():
             data['cell'].append(traj[idx].get_cell(complete=True))
             data['f_data'].append(traj[idx].calc.results["forces"])  # eV/ang
             data['e_data'].append(traj[idx].calc.results["energy"]) # eV
+            data['e_weight'].append(1.0)
+            f_weights = np.full((len(traj[idx].numbers), 3), 1.0, dtype=float)
+            data['f_weights'].append(f_weights)
             print(data['e_data'][-1])
 
     # save to file

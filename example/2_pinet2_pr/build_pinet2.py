@@ -65,6 +65,8 @@ def build_model(nSeed):
                                 "e_unit": 1.0,
                                 "use_e_per_atom": False,
                                 "log_e_per_atom": True,
+                                "use_e_weight": True,
+                                "use_f_weights": True,
                              }
                        }
 
@@ -168,5 +170,5 @@ if __name__ == '__main__':
 
     # pre-train PiNet2 models on the MACE datasets
     # execute by slurm
-    random_seed = 1 # [1,2,4]
+    random_seed = 4 # [1,2,4]
     build_model(random_seed)
