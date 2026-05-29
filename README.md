@@ -17,6 +17,8 @@ PiNNAcLe (https://github.com/Teoroo-CMC/PiNNAcLe) was originaly developed for ac
   - In each generation, a number of new snapshots are collected from the MD trajectory driven by the latest PiNet2-P3 models.
   - The collected snapshots are then labeled using the CP2K package at the predefined DFT level and added to the DFT dataset.
   - The atomic dresses of the PiNet2-P3 model are updated based on the new training set, followed by model fine-tuning.
++ The energy and force weights of outliers with extremely large _f_max_ values were set to zero to stabilize the fine-tuning process.
++ A _start_idx_ option was added to params.collect_flags to skip the several initial snapshots when sampling the trajectory, thereby avoiding potential data leakage.
 
 # Installation
 + Download the PiNNAcLe-FT repo
@@ -54,10 +56,10 @@ cp PiNNAcLe-FT/io/*.py {TIPS_DIR}/io/
 + Step 3: Prepare input and configuration files for PiNNAcLe-FT.
   - Modify the CP2K input parameters in _input/cp2k/r2SCAN-sp.inp_ to match your target system.
   - Copy the system XYZ file to _input/geo_ and the pre-trained models to _input/models_.
-  - Update the environment path, cp2k2023_2.sif path, GPU configuration, and SLURM account in the _nextflow.config_ file.
+  - Update the environment path, PYTHONPATH, cp2k2023_2.sif path, GPU configuration, and SLURM account in the _nextflow.config_ file.
 + Step 4: Adjust the PiNNAcLe-FT hyperparameters in _nextflow/acle-cp2k-from-user-model.nf_ based on your specific task.
   - The _params.change_edress_ hyperparameter controls whether the e_dress of PiNet2-P3 models is updated during fine-tuning.
-  - The _params.root_path_ hyperparameter defines the working directory for the **release_space** channel, which removes intermediate files to free disk space.
+  - If disk space is limited, uncomment **release_space** channel to remove some intermediate files.
   - For other hyperparameters, please refer to the original PiNNAcLe documentation: https://teoroo-cmc.github.io/PiNNAcLe/recipe/acle/
 + Step 5: Fine-tune the PiNet2-P3 model
 ```
