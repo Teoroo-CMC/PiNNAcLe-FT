@@ -205,6 +205,7 @@ def analyse_after_train(model_abs_path, ds_abs_path, tfr_file_name):
         ("with weight < 0.1", weights < 0.1),
     ]
 
+    msg_list = [] # comment this line if want to print Net force per atom
     for desc, mask in cases:
         msg = f"after training on {tfr_file_name} set {desc}: "
         msg += compute_metrics(e_pred, e_label, f_pred, f_label, mask)
