@@ -17,7 +17,7 @@ PiNNAcLe (https://github.com/Teoroo-CMC/PiNNAcLe) was originaly developed for ac
   - In each generation, a number of new snapshots are collected from the MD trajectory driven by the latest PiNet2-P3 models.
   - The collected snapshots are then labeled using the CP2K package at the predefined DFT level and added to the DFT dataset.
   - The atomic dresses of the PiNet2-P3 model are updated based on the new training set, followed by model fine-tuning.
-+ The energy and force weights of outliers with extremely large _f_max_ values were set to zero to stabilize the fine-tuning process.
++ The energy and force weights of outliers with _f_max_ values exceeding twice the tolerance threshold were set to zero to stabilize the fine-tuning process.
 + A _start_idx_ option was added to params.collect_flags to skip the several initial snapshots when sampling the trajectory, thereby avoiding potential data leakage.
 
 # Installation
