@@ -41,11 +41,13 @@ apptainer build cp2k2023_2.sif cp2k-v2023.def
 ```
 cd ..
 pip install git+https://github.com/Teoroo-CMC/PiNN.git --no-deps
+cp PiNNAcLe-FT/pinn_modified/*.py {PINN_DIR}/models/
 ```
 + Install the tips package developed by Yunqi, and update the modifiations
 ```
 pip install git+https://github.com/yqshao-archive/tips.git
-cp PiNNAcLe-FT/io/*.py {TIPS_DIR}/io/
+cp PiNNAcLe-FT/tips_modified/io/*.py {TIPS_DIR}/io/
+cp PiNNAcLe-FT/tips_modified/cli/*.py {TIPS_DIR}/cli/
 ```
 
 # Usage
