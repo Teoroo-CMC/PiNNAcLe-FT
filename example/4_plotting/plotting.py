@@ -189,10 +189,10 @@ def drawFinetuningCurve(nSeed):
     ax5.set_xticks(np.arange(0,np.max(listTestGen)+1,2))
     # ax1.set_xlim(-2,42)
     # ax1.set_ylim(0.1,9.9)
-    ax2.set_ylim(0,4.9)
+    ax2.set_ylim(0,6.9)
     ax3.set_ylim(20,99)
-    ax4.set_ylim(0,9)
-    ax5.set_ylim(20,699)
+    ax4.set_ylim(0,26)
+    ax5.set_ylim(20,1999)
     # tax.set_ylim(2e-1,2e3)
 
     leg1 = ax1.legend([l1, l2], ['Steps', 'Time'], loc=4, frameon=True)
@@ -218,108 +218,6 @@ def drawFinetuningCurve(nSeed):
     plt.savefig(fname=strOutFile, dpi=300)
     plt.close()
 
-# 
-def drawNetForceAndAtomicDress(nSeed):
-
-    import re
-    from glob import glob
-    import matplotlib.patheffects as pe
-
-    pinnacle_output_dir = FT_DIR / f"output-cp2k-from-model-seed{nSeed}"
-
-    # get net force results
-    listNetForce = []
-    listPiNNAppendFile = glob(f'{pinnacle_output_dir}/models/gen*/model1/append.log')
-    listPiNNAppendGen = [int(re.search('gen(\d+)', l)[1]) for l in listPiNNAppendFile]
-    for strFile in listPiNNAppendFile:
-        with open(strFile, "r") as f:
-            listLines = f.readlines()
-            assert "Net force per atom (meV/Ang/Atom) on whole set" in listLines[0]
-            dNetForcePerAtom_X = float(re.search(r"x=([+-]?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)", listLines[0])[1])
-            dNetForcePerAtom_Y = float(re.search(r"y=([+-]?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)", listLines[0])[1])
-            dNetForcePerAtom_Z = float(re.search(r"z=([+-]?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)", listLines[0])[1])
-            listNetForce.append([dNetForcePerAtom_X, dNetForcePerAtom_Y, dNetForcePerAtom_Z])
-    arrDataNetForce = np.array([[g,*e] for g, e in zip(listPiNNAppendGen, listNetForce)])
-    arrDataNetForce = arrDataNetForce[arrDataNetForce[:,0].argsort()]
-
-    # get e_dress changes over generations
-    import yaml
-    nMaxGen = np.max(listPiNNAppendGen)
-    listPiNNYMLFile = glob(f'{pinnacle_output_dir}/models/gen{nMaxGen}/model1/model/params.yml*')
-    listSavedTime = []
-    listHAtomicDress = []
-    listOAtomicDress = []
-    for strFile in listPiNNYMLFile:
-
-        listNameItems = strFile.split("/")[-1].split(".")
-        if len(listNameItems) < 3:
-            listSavedTime.append(np.nan)
-        else:
-            listSavedTime.append(int(listNameItems[-1]))
-
-        params = {}
-        with open(strFile, 'r') as f:
-            params = yaml.load(f, Loader=yaml.Loader)
-
-        dictDress = params["model"]["params"]["e_dress"]
-        listHAtomicDress.append(dictDress[1])
-        listOAtomicDress.append(dictDress[8])
-
-    arrHAtomicDress = np.array([[g,e] for g, e in zip(listSavedTime, listHAtomicDress)])
-    arrHAtomicDress = arrHAtomicDress[arrHAtomicDress[:,0].argsort()]
-
-    arrOAtomicDress = np.array([[g,e] for g, e in zip(listSavedTime, listOAtomicDress)])
-    arrOAtomicDress = arrOAtomicDress[arrOAtomicDress[:,0].argsort()]
-
-    # do the plot
-    f, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=[7, 5], 
-                                    sharex=True, gridspec_kw={'hspace':0})
-
-    l1, = ax1.plot(arrDataNetForce[:,0], arrDataNetForce[:,1], '.-')
-    l2, = ax1.plot(arrDataNetForce[:,0], arrDataNetForce[:,2], 'd-')
-    l3, = ax1.plot(arrDataNetForce[:,0], arrDataNetForce[:,3], 's-')
-    l4, = ax2.plot(arrDataNetForce[:,0], arrHAtomicDress[:,1][0:len(arrDataNetForce[:,0])], '.-')
-    l5, = ax3.plot(arrDataNetForce[:,0], arrOAtomicDress[:,1][0:len(arrDataNetForce[:,0])], '.-')
-
-    # threshold
-    ax1.plot([0,arrDataNetForce[:,0][-1]], [1.0,1.0], 'k--', lw=1)
-
-    ax1.grid()
-    ax2.grid()
-    ax3.grid()
-
-    ax1.set_ylabel('Net force\n [meV/$\AA$/atom]')
-    ax2.set_ylabel('Atomic dress\n [eV]')
-    ax3.set_ylabel('Atomic dress\n [eV]')
-    ax3.set_xlabel('Generation')
-
-    leg1 = ax1.legend([l1, l2, l3], ['X', 'Y', 'Z'], loc=1, frameon=True)
-    leg2 = ax2.legend([l4], ['H'],  loc=1, frameon=True)
-    leg3 = ax3.legend([l5], ['O'],  loc=1, frameon=True)
-
-    ax1.set_ylim(-0.3,1.1)
-    # ax2.set_ylim(20,99)
-    # ax3.set_ylim(0,9)
-
-    mype = [pe.withStroke(linewidth=4, foreground='w')]
-    for leg in [leg1, leg2, leg3]:
-        for t in leg.get_texts():
-            t.set_path_effects(mype)
-
-    for label, ax in zip('abc', (ax1, ax2, ax3)):
-        t = ax.text(0.02,0.95, f'{label})', transform=ax.transAxes, va='top',
-                    fontsize=12)
-        t.set_path_effects(mype)
-
-    f.align_ylabels()
-    plt.tight_layout()
-
-    strOutFile = WORK_DIR / f"net_force_e_dress_seed{nSeed}.jpg"
-    plt.savefig(fname=strOutFile, dpi=300)
-    plt.close()
-
-
 if __name__ == '__main__':
 
     drawFinetuningCurve(nSeed=4)
-    drawNetForceAndAtomicDress(nSeed=4)
