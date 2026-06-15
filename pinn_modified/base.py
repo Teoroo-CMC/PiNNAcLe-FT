@@ -55,7 +55,10 @@ class MetricsCollector():
                 tf.compat.v1.summary.scalar(f'{tag}_RMSE', rmse)
             if mask is not None:
                 error = tf.boolean_mask(error, mask)
-                weight = tf.boolean_mask(weight, mask) # to avoid the mismatch between weight and error zhan-yun zhang 20260427
+                # to avoid the mismatch between weight and error zhan-yun zhang 20260427
+                # however, after added the following line, the mismatch error was encountered when using the RUNNER format dataset  zhan-yun zhang 20260615
+                # so far, still no good solution
+                weight = tf.boolean_mask(weight, mask)
             if use_error:
                 loss = tf.reduce_mean(error**2 * weight)
                 tf.compat.v1.summary.scalar(f'{tag}_LOSS', loss)
@@ -67,7 +70,10 @@ class MetricsCollector():
                 self.METRICS[f'METRICS/{tag}_RMSE'] = tf.compat.v1.metrics.root_mean_squared_error(data, pred)
             if mask is not None:
                 error = tf.boolean_mask(error, mask)
-                weight = tf.boolean_mask(weight, mask) # to avoid the mismatch between weight and error zhan-yun zhang 20260427
+                # to avoid the mismatch between weight and error zhan-yun zhang 20260427
+                # however, after added the following line, the mismatch error was encountered when using the RUNNER format dataset  zhan-yun zhang 20260615
+                # so far, still no good solution
+                weight = tf.boolean_mask(weight, mask)
             if use_error:
                 loss = tf.reduce_mean(error**2 * weight)
                 self.METRICS[f'METRICS/{tag}_LOSS'] = tf.compat.v1.metrics.mean(loss)
