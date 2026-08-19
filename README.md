@@ -1,5 +1,5 @@
 # PiNNAcLe-FT
-PiNNAcLe (https://github.com/Teoroo-CMC/PiNNAcLe) was originaly developed for active learn-on-the-fly tasks in machine learning interatomic potential (MLIPs). PiNNAcLe-FT is an extension of PiNNAcLe for efficient foundational model distillation and fine-tuning (FT) with DFT labels. 
+PiNNAcLe (https://github.com/Teoroo-CMC/PiNNAcLe) was originally developed for active learn-on-the-fly tasks in machine learning interatomic potential (MLIPs). PiNNAcLe-FT is an extension of PiNNAcLe for efficient foundational model distillation and fine-tuning (FT) with DFT labels. 
 
 # What’s New
 + Eliminate the need to construct a large initial DFT dataset and ensure stable dynamics of gen0 model via foundation model distillation.
@@ -12,7 +12,7 @@ PiNNAcLe (https://github.com/Teoroo-CMC/PiNNAcLe) was originaly developed for ac
 
 # Approach
 + Construct a diverse dataset for target systems using low-cost foundation models (e.g., MACE-MP-0, https://github.com/ACEsuit/mace-foundations).
-+ Pre-train PiNet2-P3 models on this dataset for the gen0 model, i.e. foundation model distillation.
++ Pre-train PiNet2-P3 models on this dataset for the gen0 model, i.e. foundation model distillation (see https://doi.org/10.1016/j.electacta.2026.149136).
 + Initiate the PiNNAcLe-FT workflow to fine-tune the pre-trained PiNet2-P3 models with DFT labels and the matched atomic dress.
   - In each generation, a number of new snapshots are collected from the MD trajectory driven by the latest PiNet2-P3 models.
   - The collected snapshots are then labeled using the CP2K package at the predefined DFT level and added to the DFT dataset.
@@ -43,7 +43,7 @@ cd ..
 pip install git+https://github.com/Teoroo-CMC/PiNN.git --no-deps
 cp PiNNAcLe-FT/pinn_modified/*.py {PINN_DIR}/models/
 ```
-+ Install the tips package developed by Yunqi, and update the modifiations
++ Install the tips package developed by Yunqi, and update the modifications
 ```
 pip install git+https://github.com/yqshao-archive/tips.git
 cp PiNNAcLe-FT/tips_modified/io/*.py {TIPS_DIR}/io/
