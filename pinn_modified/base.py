@@ -57,7 +57,8 @@ class MetricsCollector():
                 error = tf.boolean_mask(error, mask)
                 # to avoid the mismatch between weight and error zhan-yun zhang 20260427
                 # however, after added the following line, the mismatch error was encountered when using the RUNNER format dataset  zhan-yun zhang 20260615
-                # so far, still no good solution
+                # a good solution is add "use_e_weight: true, use_f_weights: true", zhan-yun zhang 20260615
+                # or just remove the e_weight/f_weights from the dataset if you do not need it in the yml file. zhan-yun zhang 20260615
                 weight = tf.boolean_mask(weight, mask)
             if use_error:
                 loss = tf.reduce_mean(error**2 * weight)
@@ -72,7 +73,8 @@ class MetricsCollector():
                 error = tf.boolean_mask(error, mask)
                 # to avoid the mismatch between weight and error zhan-yun zhang 20260427
                 # however, after added the following line, the mismatch error was encountered when using the RUNNER format dataset  zhan-yun zhang 20260615
-                # so far, still no good solution
+                # a good solution is add "use_e_weight: true, use_f_weights: true", zhan-yun zhang 20260615
+                # or just remove the e_weight/f_weights from the dataset if you do not need it in the yml file. zhan-yun zhang 20260615
                 weight = tf.boolean_mask(weight, mask)
             if use_error:
                 loss = tf.reduce_mean(error**2 * weight)

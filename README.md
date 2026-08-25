@@ -22,10 +22,10 @@ PiNNAcLe (https://github.com/Teoroo-CMC/PiNNAcLe) was originally developed for a
 + The energy and force weights of outliers with _f_max_ values exceeding twice the tolerance threshold were set to zero to stabilize the fine-tuning process.
 + A _start_idx_ option was added to params.collect_flags to skip the several initial snapshots when sampling the trajectory, thereby avoiding potential data leakage.
 
-# Installation
+# Installation on Alvis
 + Download the PiNNAcLe-FT repo
 ```
-git clone https://github.com/zzy2014/PiNNAcLe-FT.git
+git clone https://github.com/Teoroo-CMC/PiNNAcLe-FT.git
 ```
 + Create the conda environment
 ```
@@ -52,6 +52,53 @@ cp PiNNAcLe-FT/tips_modified/io/*.py {TIPS_DIR}/io/
 cp PiNNAcLe-FT/tips_modified/cli/*.py {TIPS_DIR}/cli/
 ```
 
+# Installation on Arrhenius
+
++ Install Nextflow by following the documentation https://www.nextflow.io/docs/latest/install.html
+
++ Prepare the GPU environment for installation
+```
+srun -A naiss2025-5-447-gpu -p gpu --gres=gpu:nvidia_gh200_120gb:1 -t 2:00:00 --mem=120G --pty bash
+module load GPU/Miniforge/26.3.2-2-eb
+```
+
++ Download the PiNNAcLe-FT repo
+```
+git clone https://github.com/Teoroo-CMC/PiNNAcLe-FT.git
+```
++ Create the conda environment
+```
+cd PiNNAcLe-FT
+conda env create -f environment_arrhenius.yml -p /nobackup/proj/disk/snic2022-5-322/shared/zhanyun/conda_envs/pinnacle
+conda activate /nobackup/proj/disk/snic2022-5-322/shared/zhanyun/conda_envs/pinnacle
+```
++ Build singularity image of cp2k-2023.2
+```
+cd docker
+apptainer build cp2k2023_2.sif cp2k-v2023.def
+```
++ Build the PiNN docker image
+```
+git clone https://github.com/Teoroo-CMC/PiNN.git
+cp ../pinn_modified/*.py PiNN/pinn/models/
+cp ../pinn_modified/Singularity-acle.gpu PiNN/
+cp -r ../tips_modified PiNN
+cd PiNN
+mkdir apptainer-cache
+mkdir apptainer-tmp
+export APPTAINER_CACHEDIR=/nobackup/proj/disk/snic2022-5-322/shared/zhanyun/PiNNAcLe-FT/docker/PiNN/apptainer-cache
+export APPTAINER_TMPDIR=/nobackup/proj/disk/snic2022-5-322/shared/zhanyun/PiNNAcLe-FT/docker/PiNN/apptainer-tmp
+apptainer build pinn-gpu-acle.sif Singularity-acle.gpu
+apptainer exec "pinn-gpu-acle.sif" pinn --help # check
+```
++ Check if the tips package was updated correctly
+```
+apptainer exec "pinn-gpu-acle.sif" tips --help
+apptainer exec pinn-gpu-acle.sif bash -c 'TIPS_DIR=$(python -c "import tips, os; print(os.path.dirname(tips.__file__))"); echo "tips: $TIPS_DIR"; cat "$TIPS_DIR/io/dataset.py"'
+```
+
++ Press Ctrl+D to exit the GPU environment.
+
 # Usage
 + Step 1: Run MD simulations using foundation models to construct a large and conformationally diverse dataset from the trajectories.
   - Conformational diversity can be enhanced by performing MD simulations at varying temperatures or concentrations.
@@ -68,5 +115,6 @@ cp PiNNAcLe-FT/tips_modified/cli/*.py {TIPS_DIR}/cli/
 + Step 5: Fine-tune the PiNet2-P3 model
 ```
 cd PiNNAcLe-FT
-nextflow run main.nf -profile alvis -bg > log.out
+nextflow run main.nf -profile alvis -bg > log.out                  # on Alvis
+NXF_VER=23.10.1 nextflow run main.nf -profile arrhen -bg > log.out # on Arrhenius
 ```

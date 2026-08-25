@@ -1,0 +1,36 @@
+# Apptainer/Singularity GPU image for PiNN — mirrors Dockerfile.gpu.
+# The cluster has no docker/podman, so build the SIF directly with apptainer:
+#   cd <repo> && apptainer build /path/on/allowed/fs/pinn-gpu.sif Singularity.gpu
+# (%files paths are resolved relative to this build CWD = the repo root.)
+# Store the SIF on an apptainer-allowed path (/nobackup/proj/..., /scratch — NOT
+# $HOME) and run with --nv on a GH200 node.
+Bootstrap: docker
+From: nvcr.io/nvidia/tensorflow:24.03-tf2-py3
+
+%files
+    pinn /opt/src/pinn/pinn
+    setup.py /opt/src/pinn/setup.py
+    requirements-dev.txt /opt/src/pinn/requirements-dev.txt
+    requirements-doc.txt /opt/src/pinn/requirements-doc.txt
+    requirements-extra.txt /opt/src/pinn/requirements-extra.txt
+    tips_modified /opt/src/tips_modified
+
+%post
+    # Modify the version dependencies For PiNNAcLe-FT.
+    pip install --no-cache-dir 'ase~=3.25.0' 'click~=7.0' 'pyyaml>=6.0.1' 'numpy~=1.23.5' 'scipy~=1.15.1'
+    pip install --no-cache-dir --no-deps /opt/src/pinn
+    pip install --no-cache-dir git+https://github.com/yqshao-archive/tips.git
+
+    # Find installed tips directory
+    TIPS_DIR=$(python -c "import tips, os; print(os.path.dirname(tips.__file__))")
+    echo "tips installed at: ${TIPS_DIR}"
+    # Overwrite tips with your modified files
+    cp /opt/src/tips_modified/io/* "${TIPS_DIR}/io"
+    cp /opt/src/tips_modified/cli/* "${TIPS_DIR}/cli"
+
+%runscript
+    exec pinn "$@"
+
+%labels
+    pinn.tensorflow 2.15.0
+    pinn.base nvcr.io/nvidia/tensorflow:24.03-tf2-py3
