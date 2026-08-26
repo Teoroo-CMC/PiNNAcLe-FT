@@ -77,11 +77,11 @@ conda activate /nobackup/proj/disk/snic2022-5-322/shared/zhanyun/conda_envs/pinn
 cd docker
 apptainer build cp2k2023_2.sif cp2k-v2023.def
 ```
-+ Build the PiNN docker image
++ Build the PiNN GPU docker image
 ```
 git clone https://github.com/Teoroo-CMC/PiNN.git
 cp ../pinn_modified/*.py PiNN/pinn/models/
-cp ../pinn_modified/Singularity-acle.gpu PiNN/
+cp ../pinn_modified/Singularity-acle* PiNN/
 cp -r ../tips_modified PiNN
 cd PiNN
 mkdir apptainer-cache
@@ -98,6 +98,16 @@ apptainer exec pinn-gpu-acle.sif bash -c 'TIPS_DIR=$(python -c "import tips, os;
 ```
 
 + Press Ctrl+D to exit the GPU environment.
+
++ Build the PiNN CPU docker image
+Although tips can run on GPU nodes, using a GPU node is inconvenient and may unnecessarily consume GPU resources.
+Therefore, running tips on the CPU-only login node is a better way. For this purpose, we also need a CPU-only Docker image.
+```
+cd PiNN
+apptainer build pinn-cpu-acle.sif Singularity-acle
+apptainer exec "pinn-cpu-acle.sif" pinn --help # check pinn
+apptainer exec "pinn-cpu-acle.sif" tips --help # check tips
+```
 
 # Usage
 + Step 1: Run MD simulations using foundation models to construct a large and conformationally diverse dataset from the trajectories.
