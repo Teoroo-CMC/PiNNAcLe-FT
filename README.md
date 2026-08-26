@@ -100,7 +100,7 @@ apptainer exec pinn-gpu-acle.sif bash -c 'TIPS_DIR=$(python -c "import tips, os;
 + Press Ctrl+D to exit the GPU environment.
 
 + Build the PiNN CPU docker image
-Although tips can run on GPU nodes, using a GPU node is inconvenient and may unnecessarily consume GPU resources.
+</br> Although tips can run on GPU nodes, using a GPU node is inconvenient and may unnecessarily consume GPU resources.
 Therefore, running tips on the CPU-only login node is a better way. For this purpose, we also need a CPU-only Docker image.
 ```
 cd PiNN
