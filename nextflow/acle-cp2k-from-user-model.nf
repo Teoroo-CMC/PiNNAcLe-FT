@@ -51,8 +51,8 @@ params.md_flags      = '--ensemble nvt --dt 0.5 -t 10 --log-every 100 --T 330'
 params.collect_flags = "-f asetraj --subsample uniform --nsample 10 --start-idx 20 -of idx.xyz -o ds --filter 'mindist>0.3'"
 params.sp_points     = 10 // number of single point calculation jobs, usually it = nsample
 params.merge_flags   = '-f cp2klog' // format the single point calculation output file
-params.old_flag      = '--subsample uniform --psample 100' // when mixing the old and new datasets, 240 old samples were used
-params.new_flag      = '--subsample uniform --psample 100' // when mixing the old and new datasets, all new samples (100%) were used
+params.old_flag      = '--subsample uniform --psample 100' // when mixing the old and new datasets, all old samples were used
+params.new_flag      = '--subsample uniform --psample 100' // when mixing the old and new datasets, all new samples were used
 params.frmsetol      = 0.031 // the RMSE of force components (eV/ang)
 params.ermsetol      = 0.001 // the RMSE of energy per atom (eV)
 params.fmaxtol       = 0.500 // the maximal absolute differnece of force components (eV/ang)

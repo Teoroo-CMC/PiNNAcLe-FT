@@ -1,7 +1,6 @@
 nextflow.enable.dsl=2
 
 params.publish = 'cp2k'
-params.cp2k_cmd = 'mpirun -n 4 cp2k.psmp'
 params.cp2k_aux = null
 
 process cp2k {

@@ -74,11 +74,6 @@ cd PiNNAcLe-FT
 conda env create -f environment_arrhenius.yml -p /nobackup/proj/disk/snic2022-5-322/shared/zhanyun/conda_envs/pinnacle
 conda activate /nobackup/proj/disk/snic2022-5-322/shared/zhanyun/conda_envs/pinnacle
 ```
-+ Build singularity image of cp2k-2023.2
-```
-cd docker
-apptainer build cp2k2023_2.sif cp2k-v2023.def
-```
 + Build the PiNN GPU docker image
 ```
 git clone https://github.com/Teoroo-CMC/PiNN.git

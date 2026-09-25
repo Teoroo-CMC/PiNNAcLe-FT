@@ -24,7 +24,7 @@ def _index_energy(fname):
     import mmap, re
 
     f = open(fname, "r")
-    regex = r"ENERGY\|\ Total FORCE_EVAL.*:\s*([-+]?\d*\.?\d*)"
+    regex = r"ENERGY\|\ Total FORCE_EVAL.*\]\s*([-+]?\d*\.?\d*)"
     energies = [float(e) * units["Hartree"] for e in re.findall(regex, f.read())]
     f.close()
     return energies
@@ -66,13 +66,12 @@ def _load_force(fname, loc):
     data = []
     f.seek(loc)
     assert (
-        f.readline().startswith(" ATOMIC FORCES in [a.u.]")
-        & f.readline().startswith("\n")
-        & f.readline().startswith(" # Atom   Kind   Element")
+        f.readline().startswith(" FORCES| Atomic forces [hartree/bohr]")
+        & f.readline().startswith(" FORCES|   Atom")
     ), "Unknown format of CP2K log, aborting"
     l = f.readline().strip()
-    while not l.startswith("SUM OF"):
-        data.append(l.split()[3:])
+    while not l.startswith("FORCES| Sum"):
+        data.append(l.split()[2:5])
         l = f.readline().strip()
     f.close()
     return {"force": np.array(data, np.float) * units["Hartree"] / units["Bohr"]}
@@ -83,7 +82,7 @@ def _load_stress(fname, loc):
     data = []
     f.seek(loc)
     assert f.readline().startswith(
-        " STRESS| Analytical stress tensor [GPa]"
+        " STRESS| Analytical stress tensor [bar]"
     ) & f.readline().startswith(
         " STRESS|                        x"
     ), "Unknown format of CP2K log, aborting"
@@ -91,7 +90,7 @@ def _load_stress(fname, loc):
         l = f.readline().strip()
         data.append(l.split()[2:])
     f.close()
-    return {"stress": -np.array(data, np.float) * units["GPa"]}
+    return {"stress": -np.array(data, np.float) * units["bar"]}
 
 
 @list_loader
@@ -128,9 +127,9 @@ def load_cp2klog(fname):
             fname, b" MODULE QUICKSTEP: ATOMIC COORDINATES IN ANGSTROM"
         ),
         "energy": _index_energy,
-        "force": lambda fname: _index_pattern(fname, b" ATOMIC FORCES in \[a.u.\]"),
+        "force": lambda fname: _index_pattern(fname, b" FORCES\| Atomic forces \[hartree/bohr\]"),
         "stress": lambda fname: _index_pattern(
-            fname, b" STRESS\| Analytical stress tensor \[GPa\]"
+            fname, b" STRESS\| Analytical stress tensor \[bar\]"
         ),
     }
 
