@@ -6,6 +6,7 @@ def space_sep(in) {(in instanceof Path) ?in :in.join(' ')}
 
 process convert {
   label 'tips'
+  label 'trajectory_extract'
   publishDir "$params.publish/$name"
 
   input:
