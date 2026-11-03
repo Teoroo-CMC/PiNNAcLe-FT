@@ -124,3 +124,7 @@ cd PiNNAcLe-FT
 nextflow run main.nf -profile alvis -bg > log.out                  # on Alvis
 NXF_VER=23.10.1 nextflow run main.nf -profile arrhen -bg > log.out # on Arrhenius
 ```
+
+## Configuring trajectory extraction resources
+
+Frame extraction can be scheduled independently of other TIPS processes using an optional configuration override. See [the extraction resource example](example/extraction/README.md) and [the synthetic integration regression](tests/extraction/README.md). Existing execution settings are unchanged unless an override is supplied.
