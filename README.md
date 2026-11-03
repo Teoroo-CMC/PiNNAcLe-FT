@@ -1,5 +1,5 @@
 # PiNNAcLe-FT
-PiNNAcLe (https://github.com/Teoroo-CMC/PiNNAcLe) was originally developed for active learn-on-the-fly tasks in machine learning interatomic potential (MLIPs). PiNNAcLe-FT is an extension of PiNNAcLe for efficient foundational model distillation and fine-tuning (FT) with DFT labels. 
+PiNNAcLe (https://github.com/Teoroo-CMC/PiNNAcLe) was originally developed for active learn-on-the-fly tasks in machine learning interatomic potential (MLIPs). PiNNAcLe-FT is an extension of PiNNAcLe for efficient foundational model distillation and fine-tuning (FT) with DFT labels: A. van Hees, Z.-Y. Zhang, L. Andersson, and C. Zhang, “ Field-Driven Proton Transport in Water Revealed by Machine Learning Molecular Dynamics.” Advanced Science (2026): e78513. https://doi.org/10.1002/advs.78513.
 
 <img src="/PiNNAcLe-FT.png" alt="pinnnacle-ft" style="height: 121px; width:598px;"/>
 
