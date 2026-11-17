@@ -23,9 +23,23 @@ process train {
     convert_flag = "${(flags =~ /--seed[\s,\=]\d+/)[0]}"
     train_flags = "${flags.replaceAll(/--seed[\s,\=]\d+/, '')}"
     dataset = (dataset instanceof Path) ? dataset : dataset[0].baseName+'.yml'
+    edress_target = params.edress_target ?: 'total'
+    assert edress_target in ['total', 'residual'] : "edress_target must be total or residual"
+    residual_fit = edress_target == 'residual' && train_flags.tokenize().contains('--init')
+    if (residual_fit) {
+      assert !train_flags.tokenize().contains('--no-init') : "Conflicting initialization flags"
+      train_flags = train_flags.replaceAll(/(?<!\S)--init(?!\S)/, '--no-init')
+    }
+    dress_output = residual_fit ? "'model'" : 'None'
     """
 
     pinn convert $dataset -o 'train:9,eval:1' $convert_flag
+
+    if [ ! -f $input/params.yml ];  then
+        mkdir -p model; cp $input model/params.yml
+    else
+        cp -rL $input model
+    fi
 
 python << 'EOF'
 import os
@@ -33,7 +47,7 @@ from weight_utils import compute_weight
 model_abs_path = os.path.abspath("input")
 ds_abs_path = os.path.dirname(os.path.abspath("${dataset}"))
 tolarence = {"fmaxtol":$fmaxtol, "emaxtol":$emaxtol, "frmsetol":$frmsetol, "ermsetol":$ermsetol}
-compute_weight(model_abs_path, ds_abs_path, "train", tolarence)
+compute_weight(model_abs_path, ds_abs_path, "train", tolarence, dress_output=$dress_output)
 EOF
 
 python << 'EOF'
@@ -59,14 +73,15 @@ ds_abs_path = os.path.dirname(os.path.abspath("${dataset}"))
 add_weight_to_ds(ds_abs_path, "eval")
 EOF
 
-    if [ ! -f $input/params.yml ];  then
-        mkdir -p model; cp $input model/params.yml
-    else
-        cp -rL $input model
-    fi
     pinn train model/params.yml --model-dir='model'\
         --train-ds='train-weight.yml' --eval-ds='eval-weight.yml'\
         $train_flags
+    ${residual_fit ? """
+python << 'EOF'
+from weight_utils import verify_residual_dress
+verify_residual_dress("model")
+EOF
+""" : ''}
     pinn log model/eval > pinn.log
 
 python << 'EOF'
