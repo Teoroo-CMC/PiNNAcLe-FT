@@ -109,7 +109,7 @@ process check {
   fsae = np.sum(np.abs(f_pred-f_label)) # for the calcuation of total MAE without ase trajectory
   esse = np.sum((e_pred-e_label)**2) # for the calcuation of total RMSE without ase trajectory
   fsse = np.sum((f_pred-f_label)**2) # for the calcuation of total RMSE without ase trajectory
-  converged = (emax<$emaxtol) and (fmax<$fmaxtol) and (ermse<$ermsetol) and (frmse<$frmsetol) and (len(idx)==$sp_points)
+  converged = (emax<$emaxtol) and (fmax<$fmaxtol) and (ermse<$ermsetol) and (frmse<$frmsetol) and (len(idx)>=int(np.ceil(0.9*$sp_points)))
 
   geoname = "$name".split('/')[1]
   if converged:

@@ -128,3 +128,13 @@ NXF_VER=23.10.1 nextflow run main.nf -profile arrhen -bg > log.out # on Arrheniu
 ## Configuring trajectory extraction resources
 
 Frame extraction can be scheduled independently of other TIPS processes using an optional configuration override. See [the extraction resource example](example/extraction/README.md) and [the synthetic integration regression](tests/extraction/README.md). Existing execution settings are unchanged unless an override is supplied.
+
+### DFT labels
+
+Unconverged CP2K single points are retried once using their own saved wavefunction
+(no atomic-guess fallback). Each attempt uses the configured `cp2k` resources;
+site overrides by process name must cover both `cp2kFirst` and `cp2kRetry`.
+After all attempts finish, at least 90% of `sp_points` must have valid labels
+(9 of the default 10). Only valid labels enter evaluation and training; all four
+error thresholds still apply. Attempt logs and outcomes are published separately.
+Launch failures and scheduler timeouts remain workflow errors. CP2K MD is unchanged.

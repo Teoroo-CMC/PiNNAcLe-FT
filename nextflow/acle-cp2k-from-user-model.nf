@@ -75,8 +75,11 @@ include { sp } from "./module/${params.ref}.nf" addParams(publish: "$params.publ
 include { release_space } from "./module/tools.nf" addParams(publish: "$params.publish/tools")
 //========================================================================================
 
+include { acceptedLabels } from './module/cp2k-label.nf'
+
 // Entry point
 workflow entry {
+  assert params.sp_points.toInteger() > 0 : 'sp_points must be positive'
   logger('Starting an AcLe Loop')
   init_ds = file(params.init_ds)
   init_geo = file(params.init_geo)
@@ -185,10 +188,14 @@ workflow loop {
     | sp
 
   sp.out \
-    | map {name, logs -> (name=~/(gen\d+\/.+)\/(\d+)/)[0][1,2]+[logs]} \
-    | map {name, idx, logs -> [name, idx.toInteger(), logs]} \
+    | map {name, logs, outcome -> (name=~/(gen\d+\/.+)\/(\d+)/)[0][1,2]+[logs, outcome]} \
+    | map {name, idx, logs, outcome -> [name, idx.toInteger(), logs, outcome]} \
     | groupTuple(size:params.sp_points) \
-    | map {name, idx, logs -> [name, idx, logs, params.merge_flags]} \
+    | map {name, idx, logs, outcomes ->
+        def accepted = acceptedLabels(name, idx, logs, outcomes, params.sp_points.toInteger())
+        logger("LABEL_ACCEPTANCE ${name}: ${accepted[1].size()}/${params.sp_points}; omitted=${idx - accepted[1]}")
+        accepted + [params.merge_flags]
+      } \
     | merge \
     | set {ch_new_ds}
   //=======================================================================================
