@@ -62,6 +62,8 @@ params.acc_fac       = 2.0 // multiplier for the next MD simulation time if the 
 params.brake_fac     = 1.0 // multiplier for the next MD simulation time if the last gen not converged
 params.filters       = "--filter 'abs(force)<1000.0'" // used in check and dsmix to remove any structures with DFT force component > 1000 eV/Ang
 params.change_edress = true // changing the e_dress of PiNet2 model (e.g., from MACE-r2SCAN to DFT-r2SCAN), which used for the changing of energy level
+params.edress_target = 'total' // 'residual': account for the pretrained network when refitting
+assert params.edress_target in ['total', 'residual'] : "edress_target must be total or residual"
 //========================================================================================
 
 // Imports (publish directories are set here) ============================================
@@ -146,7 +148,7 @@ workflow loop {
                 return [gen, models, ds, (1..params.ens_size).toList(), step]} \
     | set {ch_model}
 
-  // train_init only be used in gen0, which means the e_dress only be estimated at the begining
+  // Refit in gen0, or before each retraining when change_edress is true.
   ch_model.retrain.transpose(by:[1,3]) \
     | map {gen, model, ds, seed, steps -> \
            ["gen$gen/model$seed", ds, model,
